@@ -32,33 +32,38 @@ const main = async () => {
 };
 
 // main()(
-  //promise chain
-  // login("admin", "admin")
-  //   .then((res) => {
-  //     console.log(res.msg);
-  //     return accessDashboard();
-  //   })
-  //   .then((res) => {
-  //     //i am resolv of accessDashboard
-  //     console.log(res.msg);
-  //   })
-  //   .catch((exception) => {
-  //     console.log(exception.message);
-  //   })
-  //   .finally(() => {
+//promise chain
+// login("admin", "admin")
+//   .then((res) => {
+//     console.log(res.msg);
+//     return accessDashboard();
+//   })
+//   .then((res) => {
+//     //i am resolv of accessDashboard
+//     console.log(res.msg);
+//   })
+//   .catch((exception) => {
+//     console.log(exception.message);
+//   })
+//   .finally(() => {
 
-  //   });
+//   });
 
-  //create a javascript async function to get the discount amount and after discounted price on a product after calculation
+//create a javascript async function to get the discount amount and after discounted price on a product after calculation
 const discountcalc = async (prodpric, disper) => {
-    const discount= (prodpric * disper)/100
-    const finalprice = prodpric-discount;
-    return {discount_amount : discount,productprice :finalprice }
-}
-(async () =>{
-    const amount = await discountcalc(500, 15);
-    console.log("product discount is : ", amount.discount_amount);
-    console.log("product final amount is :", amount.productprice)
-})()
+  const discount = (prodpric * disper) / 100;
+  const finalprice = prodpric - discount;
+  return { discount_amount: discount, productprice: finalprice };
+};
+(async () => {
+  const amount = await discountcalc(500, 15);
+  console.log("product discount is : ", amount.discount_amount);
+  console.log("product final amount is :", amount.productprice);
+})();
 
-
+const main1 = async () => {
+  const amount = await discountcalc(5250, 5);
+  console.log("product discount is : ", amount.discount_amount);
+  console.log("product final amount is :", amount.productprice);
+};
+main1();
