@@ -50,20 +50,25 @@ const main = async () => {
 //   });
 
 //create a javascript async function to get the discount amount and after discounted price on a product after calculation
-const discountcalc = async (prodpric, disper) => {
-  const discount = (prodpric * disper) / 100;
-  const finalprice = prodpric - discount;
-  return { discount_amount: discount, productprice: finalprice };
+const discountcalc = async (product) => {
+  product.discountamount = (product.price * product.discount) / 100;
+  product.finalprice = product.price - product.discountamount;
+  return product;
 };
-(async () => {
-  const amount = await discountcalc(500, 15);
-  console.log("product discount is : ", amount.discount_amount);
-  console.log("product final amount is :", amount.productprice);
-})();
 
-const main1 = async () => {
-  const amount = await discountcalc(5250, 5);
-  console.log("product discount is : ", amount.discount_amount);
-  console.log("product final amount is :", amount.productprice);
+const product = {
+  name: "product one",
+  price: 1000,
+  discount: 10,
 };
-main1();
+const amount =  discountcalc(product);
+console.log("product discount is : ", product.discountamount);
+console.log("product final amount is :", product.finalprice);
+console.log(product);
+
+// const main1 = async () => {
+//   const amount = await discountcalc(5250, 5);
+//   console.log("product discount is : ", amount.discount_amount);
+//   console.log("product final amount is :", amount.productprice);
+// };
+// main1();
