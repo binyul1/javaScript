@@ -1,9 +1,8 @@
-##Node js excute
+### Node js excute
 
 -single Thread Progam
 -Request
 ''''''''
-
 
                     Memory Heap
 
@@ -11,8 +10,8 @@
 
                     Grarbage collector
 
+### SOLID Principle of Software Development
 
-##SOLID Principle of Software Development
     -Single Responsibility Principle
         -a function or aclass must handle only one responsibility
         ```js
@@ -44,7 +43,7 @@
             //login logic considering email or phoneno as well
         }
         function loginwithPhone(phone, password){
-            //logic with phone no 
+            //logic with phone no
         }
 
     -Liskov Subtitution Principle
@@ -94,17 +93,23 @@
     new User(new UserService())
 
 ### 4 piller of OOPS
+
 1.Encapsulation  
-    - security/ usability/ accessibility of class properties or methods
+ - security/ usability/ accessibility of class properties or methods
+ - Access Modifier: private, protected,
+  public -> private public
 
 2.Abstraction
-    -Data to be used, then use obj
+-Data to be used, then use obj
 
 3.Inheritance
-    -reusaility of a class
+-reusaility of a class
 
-4.Polymerphism
-    - Multiple form/definition/structure
-
+4.Polymerphism - Multiple form/definition/structure
 
     #DSA data type structure and OOPs
+
+
+###
+````jsx
+    src/
