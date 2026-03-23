@@ -41,6 +41,9 @@ const loginFunc = async () => {
 //.floor() =>
 //build an async function to get random string of n length
 const randomString = async (n) => {
+   if (n <= 0) {
+    throw "Invalid Input";
+  }
   const char = "0987654321qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
   const length = char.length;
   let randomStr = "";

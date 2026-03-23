@@ -113,3 +113,8 @@
 ###
 ````jsx
     src/
+
+### Run ts in your project
+    -'package.json'
+        -`type: "common" or type: "module"`
+    -
