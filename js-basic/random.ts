@@ -1,4 +1,4 @@
-const randomString = (n: number): string => {
+const randomString1 = (n: number): string => {
   if (n <= 0) {
     throw "Invalid Input";
   }
@@ -14,7 +14,7 @@ const randomString = (n: number): string => {
   return randomStr;
 };
 
-console.log(randomString(100));
+console.log(randomString1(100));
 
 //  react => tsx react codes => compiler -> html,css,js (Vite)
 //  express => ts =>ts-node => build=> js bundle
