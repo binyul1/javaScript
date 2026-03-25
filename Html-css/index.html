@@ -6,62 +6,55 @@
 
     <title>My First Html</title>
   </head>
-  <body >
-    <header
-     
-    >
-      <nav >
+  <!-- <link rel="stylesheet" href="./style.css" /> -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <body class="antialiased bg-gray-800 text-white">
+    <header class="flex w-full bg-gray-700 item-center justify-center py-5">
+     <div class="flex w-7xl justify-between items-center">
+       <nav class="">
         <ul>
-          <h1>Nexus Terminal</h1>
+          <h1 class="text-4xl font-bold">Nexus Terminal</h1>
         </ul>
       </nav>
       <nav>
-        <ul >
-          <li>?</li>
-          <li>i</li>
+        <ul class="flex gap-3">
+          <li class="bg-gray-800 size-7 flex justify-center rounded-full">?</li>
+          <li class="bg-gray-800 size-7 flex justify-center rounded-full">i</li>
         </ul>
       </nav>
+     </div>
     </header>
     <!--Header Design-->
 
-    <main>
-      <section
-       
-      >
-        <div
-         
-        >
-          <img src="./assets/logo.jpg" alt="logo.png" />
-          <h2>Nexus Terminal</h2>
-          <p>
-            Executative Effeciency Portal
-          </p>
+    <main class="flex w-full h-[90vh] justify-center items-center">
+      <section class="bg-gray-500 p-5 rounded-md shadow-2xl shadow-gray-950">
+        <div class="flex w-full flex-col items-center justify-center gap-6">
+          <img src="./images/logo1.png" alt="logo.png" class="size-20 "/>
+          <h2 class="text-3xl font-extrabold text-[#000666]">Nexus Terminal</h2>
+          <p class="text-2xl font-semibold">Executative Effeciency Portal</p>
         </div>
 
-        <form
-          action=""
-        
-        >
-          <div >
-            <label for="username" 
-              >Employee Credentials</label
-            >
+        <form action="">
+          <div>
+            <label for="username">Employee Credentials</label>
             <input type="email" name="email" id="username" />
           </div>
           <div>
             <div>
-              <label for="password" >Password</label>
+              <label for="password">Password</label>
               <a href="/forget-password">Forgot Password</a>
             </div>
-            <input type="password" class="password" id="password" style="width: 100%;"/>
+            <input
+              type="password"
+              class="password"
+              id="password"
+              style="width: 100%"
+            />
           </div>
           <div>
             <label for="remember me">
-              <input
-                type="checkbox"
-                name="remember me"
-                value="1"
-              />Keep me Authenticated
+              <input type="checkbox" name="remember me" value="1" />Keep me
+              Authenticated
             </label>
           </div>
           <div>
@@ -72,14 +65,14 @@
         </form>
         <hr />
         <div>
-          <p >
+          <p>
             Authorized personal policy only. Access to this terminal os
             monitered and logged. By signing in you agree to the
             <a href="/privacy-policy">Privacy Policy</a>
           </p>
-          <ul >
-            <li >System Status: Online</li>
-            <li >v1.0.0</li>
+          <ul>
+            <li>System Status: Online</li>
+            <li>v1.0.0</li>
           </ul>
         </div>
       </section>
