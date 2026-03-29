@@ -10,47 +10,59 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <body class="antialiased bg-gray-800 text-white">
     <header class="flex w-full bg-gray-700 item-center justify-center py-5">
-     <div class="flex w-7xl justify-between items-center">
-       <nav class="">
-        <ul>
-          <h1 class="text-4xl font-bold">Nexus Terminal</h1>
-        </ul>
-      </nav>
-      <nav>
-        <ul class="flex gap-3">
-          <li class="bg-gray-800 size-7 flex justify-center rounded-full">?</li>
-          <li class="bg-gray-800 size-7 flex justify-center rounded-full">i</li>
-        </ul>
-      </nav>
-     </div>
+      <div class="flex w-7xl justify-between items-center">
+        <nav class="">
+          <ul>
+            <h1 class="text-4xl font-bold">Nexus Terminal</h1>
+          </ul>
+        </nav>
+        <nav>
+          <ul class="flex gap-3">
+            <li class="bg-gray-800 size-7 flex justify-center rounded-full">
+              ?
+            </li>
+            <li class="bg-gray-800 size-7 flex justify-center rounded-full">
+              i
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
     <!--Header Design-->
 
     <main class="flex w-full h-[90vh] justify-center items-center">
       <section class="bg-gray-500 p-5 rounded-md shadow-2xl shadow-gray-950">
         <div class="flex w-full flex-col items-center justify-center gap-6">
-          <img src="./images/logo1.png" alt="logo.png" class="size-20 "/>
+          <img src="./images/logo1.png" alt="logo.png" class="size-20" />
           <h2 class="text-3xl font-extrabold text-[#000666]">Nexus Terminal</h2>
           <p class="text-2xl font-semibold">Executative Effeciency Portal</p>
         </div>
 
-        <form action="">
+        <form action="" class="flex flex-col gap-8">
           <div>
-            <label for="username">Employee Credentials</label>
-            <input type="email" name="email" id="username" />
+            <label for="username" class="text-bold">Employee Credentials</label>
+            <input
+              type="email"
+              name="email"
+              id="username"
+              class="w-full border border-gray-100 rounded-md"
+            />
           </div>
-          <div>
-            <div>
+
+          <div class="flex flex-col w-full">
+            <div class="flex justify-between">
               <label for="password">Password</label>
               <a href="/forget-password">Forgot Password</a>
             </div>
+
             <input
               type="password"
-              class="password"
+              name="password"
               id="password"
-              style="width: 100%"
+              class="w-full border border-gray-100 rounded-md"
             />
           </div>
+
           <div>
             <label for="remember me">
               <input type="checkbox" name="remember me" value="1" />Keep me
