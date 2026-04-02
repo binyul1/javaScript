@@ -1,6 +1,5 @@
+import { SubmitButton } from "../../components/buttons/Button";
 import { PageTitle } from "../../components/page-title/PageTitle";
-
-
 
 export const ForgetPasswordForm = () => {
   return (
@@ -13,15 +12,9 @@ export const ForgetPasswordForm = () => {
           placeholder="Enter your username"
         />
       </div>
-      
+
       <div className="flex gap-4 mt-4">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 "
-        >
-            Submit
-        </button>
-        
+        <SubmitButton>Submit</SubmitButton>
       </div>
     </form>
   );
@@ -32,10 +25,11 @@ export default function LoginPage() {
     <section className="flex h-screen items-center justify-center bg-gray-200">
       {/*react fragment to wrap the content of the component */}
       <div className="bg-white flex flex-col gap-10 w-wrap shadow-lg rounded-md p-5">
-        <PageTitle  
-         pageTitle="Request for password change?"
-        className="text-left text-emerald-900">
-           Request for password change?
+        <PageTitle
+          pageTitle="Request for password change?"
+          className="text-left text-emerald-900"
+        >
+          Request for password change?
         </PageTitle>
         <ForgetPasswordForm />
       </div>

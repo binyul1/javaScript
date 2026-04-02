@@ -1,5 +1,8 @@
 import { useState, type BaseSyntheticEvent } from "react";
-import { InputText } from "../../components/page-title/form/InputText";
+import { CancelButton, SubmitButton } from "../buttons/Button";
+import { FormLabel } from "../form/Label";
+import { InputText } from "../form/InputText";
+import { RedirectLink } from "../links/Urls";
 
 export interface Icredentials {
   username: string;
@@ -21,35 +24,30 @@ export const LoginDesc = () => {
   };
 
   console.log(credentials);
+
   return (
-    <form className="flex flex-col justify-center items-center">
-      <div className="flex gap-4 mb-4 items-center">
-        <label className="items-center">UserName</label>
-        <InputText type="username" name="username" onChange={handleChange} />
+    <form className="flex flex-col gap-5 w-full">
+      <div className="flex w-full items-center ">
+        <FormLabel>UserName: </FormLabel>
+        <div className="w-full">
+          <InputText type="email" name="username" onChange={handleChange} />
+        </div>
       </div>
-      <div className="flex gap-4 mb-4 items-center">
-        <label className="">Password</label>
-        <InputText type="password" name="password" onChange={handleChange} />
+
+      <div className="flex w-full items-center">
+        <FormLabel>Password: </FormLabel>
+        <div className="w-full">
+          <InputText type="password" name="password" onChange={handleChange} />
+        </div>
       </div>
-      <a
-        href="/forget_password"
-        className="flex w-full justify-end underline text-teal-700 italic hover:text-teal-t00/60"
-      >
-        Forgot Password?
-      </a>
-      <div className="flex gap-4 mt-4">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 "
-        >
-          Login
-        </button>
-        <button
-          type="reset"
-          className="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600 w-[50%]"
-        >
-          Reset
-        </button>
+      <div className="flex w-full justify-end">
+        <RedirectLink href="/forget_password">
+          Forget Your Password?
+        </RedirectLink>
+      </div>
+      <div className="flex w-full gap-3">
+        <CancelButton>Reset</CancelButton>
+        <SubmitButton>Login</SubmitButton>
       </div>
     </form>
   );

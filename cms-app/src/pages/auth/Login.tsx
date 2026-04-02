@@ -11,9 +11,9 @@ export const PageTitle = () => {
 
 export default function LoginPage() {
   return (
-    <section className="flex h-screen items-center justify-center bg-gray-200">
+    <section className="flex h-screen w-full items-center justify-center bg-gray-100">
       {/*react fragment to wrap the content of the component */}
-      <div className="bg-white flex flex-col gap-10 w-wrap shadow-lg rounded-md p-5">
+      <div className="bg-white flex flex-col gap-10 w-4xl shadow-lg rounded-md p-10">
         <PageTitle />
         <LoginDesc />
       </div>
