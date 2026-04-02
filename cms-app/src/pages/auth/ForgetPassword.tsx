@@ -14,7 +14,7 @@ export const ForgetPasswordForm = () => {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <SubmitButton>Submit</SubmitButton>
+        <SubmitButton className="text-white">Submit</SubmitButton>
       </div>
     </form>
   );

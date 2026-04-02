@@ -2,10 +2,13 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import LoginPage from "../pages/auth/Login";
 import ForgetPasswordPage from "../pages/auth/ForgetPassword";
+import Dashboard from "../pages/auth/Dashboard";
+
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
   { path: "/forget_password", Component: ForgetPasswordPage },
+  { path: "/dashboard", element: <Dashboard /> }
 ]);
 
 export default function RouterConfig() {

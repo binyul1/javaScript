@@ -1,23 +1,31 @@
 import type React from "react";
 
-export interface IButtonProps{
-  className?: string, 
-  children: React.ReactNode,
-  disabled?: boolean
+export interface IButtonProps {
+  className?: string;
+  children: React.ReactNode;
+  disabled?: boolean;
 }
-export const SubmitButton = ({className='', children, disabled=false}: Readonly<IButtonProps>) => {
+export const SubmitButton = ({
+  className = "",
+  children,
+  disabled = false,
+}: Readonly<IButtonProps>) => {
   return (
     <button
-      className={`w-full text-white rounded-md cursor-pointer transition hover:bg-teal-800/90 p-2 bg-teal-800 ${className}`}
+      className={`w-full  rounded-md cursor-pointer transition  p-2 ${className}`}
       type="submit"
       disabled={disabled}
     >
       {children}
     </button>
   );
-}
+};
 
-export const CancelButton = ({className='', children, disabled=false}: Readonly<IButtonProps>) => {
+export const CancelButton = ({
+  className = "",
+  children,
+  disabled = false,
+}: Readonly<IButtonProps>) => {
   return (
     <button
       className={`w-full text-white rounded-md cursor-pointer transition hover:bg-red-800/90 p-2 bg-red-800 ${className}`}
@@ -27,4 +35,4 @@ export const CancelButton = ({className='', children, disabled=false}: Readonly<
       {children}
     </button>
   );
-}
+};

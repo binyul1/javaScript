@@ -47,7 +47,9 @@ export const LoginDesc = () => {
       </div>
       <div className="flex w-full gap-3">
         <CancelButton>Reset</CancelButton>
-        <SubmitButton>Login</SubmitButton>
+        <SubmitButton className="text-white bg-teal-800 hover:bg-teal-800/90">
+          Login
+        </SubmitButton>
       </div>
     </form>
   );
