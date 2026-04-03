@@ -3,12 +3,17 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import LoginPage from "../pages/auth/Login";
 import ForgetPasswordPage from "../pages/auth/ForgetPassword";
 import Dashboard from "../pages/auth/Dashboard";
-
+import NotFound from "../pages/errors/NotFound";
+import AdminLayout from "../pages/layout/AdminLayout";
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
   { path: "/forget_password", Component: ForgetPasswordPage },
-  { path: "/dashboard", element: <Dashboard /> }
+  { path: "/admin", element: <AdminLayout /> },
+  { path: "/admin1", element: <Dashboard /> },
+
+  //
+  { path: "*", element: <NotFound /> },
 ]);
 
 export default function RouterConfig() {

@@ -13,8 +13,10 @@ export const ForgetPasswordForm = () => {
         />
       </div>
 
-      <div className="flex gap-4 mt-4">
-        <SubmitButton className="text-white">Submit</SubmitButton>
+      <div className="w-full gap-4 mt-4">
+        <SubmitButton className="text-white bg-teal-800 hover:bg-teal-800/90">
+          Submit
+        </SubmitButton>
       </div>
     </form>
   );
@@ -24,7 +26,7 @@ export default function LoginPage() {
   return (
     <section className="flex h-screen items-center justify-center bg-gray-200">
       {/*react fragment to wrap the content of the component */}
-      <div className="bg-white flex flex-col gap-10 w-wrap shadow-lg rounded-md p-5">
+      <div className="bg-white flex flex-col gap-4 w-wrap shadow-lg rounded-md p-5">
         <PageTitle
           pageTitle="Request for password change?"
           className="text-left text-emerald-900"

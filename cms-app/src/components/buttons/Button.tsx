@@ -12,7 +12,7 @@ export const SubmitButton = ({
 }: Readonly<IButtonProps>) => {
   return (
     <button
-      className={`w-full  rounded-md cursor-pointer transition  p-2 ${className}`}
+      className={`w-full rounded-md cursor-pointer transition  p-2 ${className}`}
       type="submit"
       disabled={disabled}
     >
