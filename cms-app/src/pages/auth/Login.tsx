@@ -1,4 +1,4 @@
-import { LoginDesc } from "../../components/auth/LoginForm";
+import {  LoginForm } from "../../components/auth/LoginForm";
 
 export const PageTitle = () => {
   const pageTitle = "Login Page";
@@ -15,7 +15,7 @@ export default function LoginPage() {
       {/*react fragment to wrap the content of the component */}
       <div className="bg-white flex flex-col gap-10 w-4xl shadow-lg rounded-md p-10">
         <PageTitle />
-        <LoginDesc />
+        <LoginForm />
       </div>
     </section>
   );

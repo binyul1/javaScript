@@ -9,7 +9,7 @@ export default function AdminLayout() {
       <section className="w-full h-screen flex gap-5 bg-stone-50">
         <aside className="w-100 bg-gray-200 p-10 flex flex-col gap-5">
           <div className="flex flex-col items-center justify-center w-full">
-            <img src={logo} alt="logo" className="size-25 rounded-full" />
+            <img src={logo} alt="logo" className="size-25 rounded-full bg-gray-400" />
             <PageTitle className="text-gray-950! text-shadow-lg">
               Admin Panel
             </PageTitle>
