@@ -3,6 +3,7 @@ import { FormLabel } from "../form/Label";
 import { InputText } from "../form/InputText";
 import { RedirectLink } from "../links/Urls";
 import { useForm } from "react-hook-form";
+import Cookies from "js-cookie";
 
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,7 +15,7 @@ export interface ICredentials {
 
 //validation rules
 const loginDTO = z.object({
-  username: z.email("Invalid email"),
+  username: z.email("Invalid email").nonempty("email is required"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -33,7 +34,34 @@ export const LoginForm = () => {
   });
   const submitForm = (data: ICredentials) => {
     console.log(data);
-  };
+    //after login
+    //BE will send us a token -> auth token/JWT token
+    //header.payload.signature
+    const response = {
+      token:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
+    };
+    // cookie set
+    Cookies.set("authToken", response.token, {
+      // expires: 7,
+      secure: true,
+      sameSite: "lax",
+      // domain: "",
+      // path: ""
+    });
+  //   // localstorage set
+  //   localStorage.setItem("authToken", response.token);
+  //   sessionStorage.setItem("authToken", response.token);
+  //   caching (Redis)
+  //   firebase storage
+
+  //   // logout function
+  //   Cookies.remove("authToken",{
+  //     // path:"/"
+  //   });
+  //   localStorage.removeItem("authToken");
+  //   sessionStorage.removeItem("authToken");
+  // };
 
   // export const LoginForm = () => {
   //   //using hook form
@@ -57,13 +85,15 @@ export const LoginForm = () => {
   //   });
   // };
 
-  // const submitEvent = (e.BaseSynthetic) => {
+  // const submitEvent = (e:BaseSynthetic) => {
   //   e.preventDefault()
   //   // validate
+  //   if(!Credentials.username && ){}
   //   console.log(Credentials)
   //   //todo:Api integrate
+  //   }
 
-  // }
+  }
 
   return (
     <form

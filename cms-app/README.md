@@ -26,7 +26,7 @@ authorization and authentication
     -`Maintenance and Support`
         -Statusm, SEO Tracking, updated/upgrades
 
-# HTML
+## HTML
 
     - Tags in HTML `<tag>` or `<tag></tag>`
     - Singleton/open tag
@@ -96,7 +96,7 @@ css from begining to now
 -materilize
 -tailwind css
 
-###Nodejs
+### Nodejs
 -Runtie environment -> provides js exeutable
 -Single Threaded programing
 how js handle multipe request(thread)
@@ -104,7 +104,7 @@ how js handle multipe request(thread)
 -call stack, Memory Heap, Garbage collector
 React is a single page application because it starts from index.html
 
-#Setup
+# Setup
 -"pnpm create vite"
 -Follow the step to step react ' typescript + react Compiler '
 ##folder Architecture
@@ -123,7 +123,7 @@ React is a single page application because it starts from index.html
       main.tsx //entry point for react
 
 
-#Props Drilling
+# Props Drilling
 
 ```jsx 
     const AComp = () => {
@@ -181,3 +181,51 @@ useEffect(() => {
       credentials,
     );
   }, [credentials]);
+
+________________________-------------------_____________________
+
+  # Web Storage(can only store string)
+  a. Cookies
+    - for a specific time period to store
+    - A bit of security concern
+    - Cross-domai (Sub-domain) based
+    - ~200 to 400 kb 
+    - a cookies length can be of 4096 chars
+    - `document.cookie = 'name=value; key=value''`
+    - `js-cookie` package to maintain cookie
+    - e.g. login data(token)
+    - 'pnpm i js-cookie'
+
+  b. Local Storage
+    - not based on time 
+    - 'key = value '
+    - it can store upto ~5-10 mb
+    - `localStorage.setItem(key,value), localStorage.getItem(key), localStorage.removeItem(key), localStorage.clear()`
+    - 
+
+  c. Session Storage
+    - only assigned to a tab,
+    - upon closing the tab, the sexxionis cleared
+    - `sessionstorage.setItem(key,value), sessionstorage.getItem(key), sessionstorage.removeItem(key), sessionstorage.clear()`
+
+
+## React State Management
+    - local State (`useState()`)
+    - Global Storage
+        a. `Context`
+            - Create (Context)
+            - Provide (Provider)
+            - Consumption (Hook)
+        b. Redux/Zustand/Jotai
+            - Create (store)
+            - Provide (Provider)
+            - Consumption (Hook/dispatch)
+
+## API Integration
+    - REST Api
+    - Client Connection or call
+        - XHR/ fetch or axios (with react axios)
+        -Axios 
+    -Methods and it's usagess
+    -API-endpoint,documentation, payload, config(headers)
+    -https://dummyjson.com/docs
