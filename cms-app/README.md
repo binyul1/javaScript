@@ -226,6 +226,22 @@ ________________________-------------------_____________________
     - Client Connection or call
         - XHR/ fetch or axios (with react axios)
         -Axios 
-    -Methods and it's usagess
-    -API-endpoint,documentation, payload, config(headers)
-    -https://dummyjson.com/docs
+    - Methods and it's usagess
+    - API-endpoint,documentation, payload, config(headers)
+    - https://dummyjson.com/docs
+
+## Types of API(CRUD operation)
+    - REST, SOAP, GRAPHQL, gRPC
+    - Private api, Public api
+
+## Every API has some features like:
+- Request Architecture
+    - url => protocol://baseUrl/path?query -> eg.http://dummyjson.com/auth/login
+    - method =>(create=> POST, READ => GET. UPDATE => PUT/PATCH, Delete => DELETE) => use post req
+    - Payload(optional) => Data/body
+    - Headers => special config for an api
+
+- Response
+    - status code => Success -> 1xx or error -> 4xx or 5xx or redirect ->3xx
+    - cookies => Server side cookies
+    - payload => data sent by api server
