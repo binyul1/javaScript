@@ -3,23 +3,20 @@ import { FormLabel } from "../form/Label";
 import { InputText } from "../form/InputText";
 import { RedirectLink } from "../links/Urls";
 import { useForm } from "react-hook-form";
-
-import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-export interface ICredentials {
-  username: string;
-  password: string;
-}
-
-//validation rules
-const loginDTO = z.object({
-  // username: z.email("Invalid email").nonempty("email is required"),
-  username: z.string("Invalid string").nonempty("username is required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+import { toast } from "sonner";
+import { useNavigate } from "react-router";
+import Cookies from "js-cookie";
+import {
+  loginDTO,
+  type ICredentials,
+  type ILoginResponse,
+  type IUserDetail,
+} from "../../types/auth-type";
+import axiosInstance from "../../config/apiClient";
 
 export const LoginForm = () => {
+  const navigate = useNavigate();
   //using hook form
   const {
     control,
@@ -33,80 +30,32 @@ export const LoginForm = () => {
     resolver: zodResolver(loginDTO),
   });
   const submitForm = async (data: ICredentials) => {
-    // console.log(data);
-    // //after login
-    // //BE will send us a token -> auth token/JWT token
-    // //header.payload.signature
-    // const response = {
-    //   token:
-    //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30",
-    // };
-    // // cookie set
-    // Cookies.set("authToken", response.token, {
-    //   // expires: 7,
-    //   secure: true,
-    //   sameSite: "lax",
-    //   // domain: "",
-    //   // path: ""
-    // }
     try {
-      const response = await fetch(`http://dummyjson.com/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+      // XMLHttpRequest
+      const loginResponse = (await axiosInstance.post(
+        "auth/login",
+        data,
+      )) as ILoginResponse;
+      Cookies.set("_at_62", loginResponse.accessToken, {
+        expires: 1,
+        secure: true,
+        sameSite: "lax",
       });
-      const loginResponse = await response.json();
+      Cookies.set("_rt_62", loginResponse.refreshToken, {
+        expires: 1,
+        secure: true,
+        sameSite: "lax",
+      });
+
+      const userDetail = (await axiosInstance.get("/auth/me")) as IUserDetail;
+      // redirect
+      navigate("/" + userDetail?.role);
       console.log(loginResponse);
-    } catch (exception) {
+    } catch (exception: unknown) {
+      toast.error("Invalid or Wrong Credentials");
       console.log(exception);
     }
   };
-  //   // localstorage set
-  //   localStorage.setItem("authToken", response.token);
-  //   sessionStorage.setItem("authToken", response.token);
-  //   caching (Redis)
-  //   firebase storage
-
-  //   // logout function
-  //   Cookies.remove("authToken",{
-  //     // path:"/"
-  //   });
-  //   localStorage.removeItem("authToken");
-  //   sessionStorage.removeItem("authToken");
-  // };
-
-  // export const LoginForm = () => {
-  //   //using hook form
-  //   const {register, handleSubmit} =  useForm<Icredentials>({
-  //     defaultValues:{
-  //       username:"",
-  //       password:""
-  //     }
-  //   });
-
-  //   const [credentials, setCredentials] = useState<Icredentials>({
-  //     username: "",
-  //     password: "",
-  //   });
-
-  // const handleChange = (e: BaseSyntheticEvent) => {
-  //   const { name, value } = e.target;
-  //   setCredentials({
-  //     ...credentials,
-  //     [name]: value,
-  //   });
-  // };
-
-  // const submitEvent = (e:BaseSynthetic) => {
-  //   e.preventDefault()
-  //   // validate
-  //   if(!Credentials.username && ){}
-  //   console.log(Credentials)
-  //   //todo:Api integrate
-  //   }
-
   return (
     <form
       onSubmit={handleSubmit(submitForm)}
@@ -116,7 +65,7 @@ export const LoginForm = () => {
         <FormLabel>UserName: </FormLabel>
         <div className="w-full">
           <InputText
-            type="email"
+            type="text"
             name="username"
             control={control}
             errMsg={errors?.username?.message}
