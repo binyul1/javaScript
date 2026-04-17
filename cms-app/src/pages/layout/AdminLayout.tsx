@@ -2,19 +2,28 @@ import { LuCog, LuShoppingBag, LuShoppingCart, LuUsers } from "react-icons/lu";
 import logo from "../../assets/images/logo.jpg";
 import { PageTitle } from "../../components/page-title/PageTitle";
 import { Outlet } from "react-router";
+import { useAuth } from "../../lib/hook/auth-hook";
 
 export default function AdminLayout() {
+  //api integration
+  // only after login accessile
+  // const {loggedInUser} = useContext(AuthContext);
+  const { loggedInUser } = useAuth();
+  console.log(loggedInUser);
   return (
     <>
-      <section className="w-full h-screen flex gap-5 bg-stone-50">
-        <aside className="w-100 bg-gray-200 p-10 flex flex-col gap-5">
+      <section className="w-full h-screen flex bg-stone-50">
+        <aside className="w-100 bg-gray-200 p-10 flex-col gap-5 flex">
           <div className="flex flex-col items-center justify-center w-full">
-            <img src={logo} alt="logo" className="size-25 rounded-full bg-gray-400" />
+            <img
+              src={logo}
+              alt="logo"
+              className="size-25 rounded-full bg-gray-400"
+            />
             <PageTitle className="text-gray-950! text-shadow-lg">
               Admin Panel
             </PageTitle>
           </div>
-
           <nav>
             <ul className="flex flex-col gap-2">
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2">
@@ -44,9 +53,18 @@ export default function AdminLayout() {
             </ul>
           </nav>
         </aside>
-        <section className="w-full">
+        <section className="w-full flex flex-col">
+          <header className="w-full flex p-5 bg-gray-200">
+            <nav className="flex justify-end w-full">
+              <ul>
+                <li>Binyul Shrestha</li>
+              </ul>
+            </nav>
+          </header>
           {/* Chagned and dynamic */}
-          <Outlet />
+          <section className="p-5">
+            <Outlet />
+          </section>
         </section>
       </section>
     </>

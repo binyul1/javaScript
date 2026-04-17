@@ -245,3 +245,16 @@ ________________________-------------------_____________________
     - status code => Success -> 1xx or error -> 4xx or 5xx or redirect ->3xx
     - cookies => Server side cookies
     - payload => data sent by api server
+
+## Global State management 
+    - Context or redux
+    - Context -> Light weight state management
+    - Redux -> complex complete
+
+
+
+                        A
+                        
+                B               C
+
+        D            E  F               G

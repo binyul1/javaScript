@@ -6,51 +6,26 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import Cookies from "js-cookie";
 import {
   loginDTO,
   type ICredentials,
-  type ILoginResponse,
-  type IUserDetail,
 } from "../../types/auth-type";
-import axiosInstance from "../../config/apiClient";
+import { useAuth } from "../../lib/hook/auth-hook";
 
 export const LoginForm = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   //using hook form
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ICredentials>({
-    defaultValues: {
-      username: "",
+  const {control,handleSubmit,formState: { errors }} = useForm<ICredentials>({defaultValues: {username: "",
       password: "",
     },
     resolver: zodResolver(loginDTO),
   });
+
   const submitForm = async (data: ICredentials) => {
     try {
-      // XMLHttpRequest
-      const loginResponse = (await axiosInstance.post(
-        "auth/login",
-        data,
-      )) as ILoginResponse;
-      Cookies.set("_at_62", loginResponse.accessToken, {
-        expires: 1,
-        secure: true,
-        sameSite: "lax",
-      });
-      Cookies.set("_rt_62", loginResponse.refreshToken, {
-        expires: 1,
-        secure: true,
-        sameSite: "lax",
-      });
-
-      const userDetail = (await axiosInstance.get("/auth/me")) as IUserDetail;
-      // redirect
-      navigate("/" + userDetail?.role);
-      console.log(loginResponse);
+      const userDetail =  await login(data);
+      navigate("/"+userDetail?.role);
     } catch (exception: unknown) {
       toast.error("Invalid or Wrong Credentials");
       console.log(exception);
