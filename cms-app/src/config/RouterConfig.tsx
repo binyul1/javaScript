@@ -4,20 +4,37 @@ import LoginPage from "../pages/auth/Login";
 import ForgetPasswordPage from "../pages/auth/ForgetPassword";
 import NotFound from "../pages/errors/NotFound";
 import AdminLayout from "../pages/layout/AdminLayout";
+import CheckLogin from "../components/auth/CheckLogin";
+import ListAllProducts from "../pages/products/ListAllProducts";
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
   { path: "/forget_password", Component: ForgetPasswordPage },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <CheckLogin allowed={"admin"}>
+        <AdminLayout />
+      </CheckLogin>
+    ),
     children: [
       { index: true, element: <>Admin Dashboard</> },
-      { path: "products", element: <>Admin Products</> },
+
+      //CRUD operations
+      { path: "products", element: <ListAllProducts /> },
+
       { path: "*", element: <NotFound url="/admin" /> },
     ],
   },
 
+  {
+    path: "/user",
+    element: (
+      <CheckLogin allowed={"user"}>
+        <>User Dashboard</>
+      </CheckLogin>
+    ),
+  },
   //
   { path: "*", element: <NotFound /> },
 ]);

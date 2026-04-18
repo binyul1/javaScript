@@ -1,7 +1,7 @@
 import { LuCog, LuShoppingBag, LuShoppingCart, LuUsers } from "react-icons/lu";
 import logo from "../../assets/images/logo.jpg";
 import { PageTitle } from "../../components/page-title/PageTitle";
-import { Outlet } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { useAuth } from "../../lib/hook/auth-hook";
 
 export default function AdminLayout() {
@@ -9,6 +9,7 @@ export default function AdminLayout() {
   // only after login accessile
   // const {loggedInUser} = useContext(AuthContext);
   const { loggedInUser } = useAuth();
+
   console.log(loggedInUser);
   return (
     <>
@@ -27,22 +28,22 @@ export default function AdminLayout() {
           <nav>
             <ul className="flex flex-col gap-2">
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2">
-                <a className=" flex gap-2 items-center" href="/admin">
+                <NavLink className=" flex gap-2 items-center" to="/admin">
                   <LuCog className="text-gray-700 size-6" />
                   Dashboard
-                </a>
+                </NavLink>  
               </li>
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2">
-                <a href="/admin/products" className="flex gap-2 items-center">
+                <NavLink to="/admin/products" className="flex gap-2 items-center">
                   <LuShoppingBag className="text-gray-700 size-6" />
                   Product
-                </a>
+                </NavLink>
               </li>
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2 ">
-                <a href="/admin/users" className="flex gap-2 items-center">
+                <NavLink to="/admin/users" className="flex gap-2 items-center">
                   <LuUsers className="text-gray-700 size-6" />
                   Users
-                </a>
+                </NavLink>
               </li>
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2 ">
                 <a href="/admin/orders" className="flex gap-2 items-center">
@@ -57,12 +58,21 @@ export default function AdminLayout() {
           <header className="w-full flex p-5 bg-gray-200">
             <nav className="flex justify-end w-full">
               <ul>
-                <li>Binyul Shrestha</li>
+                <li className="flex items-center justify-content gap-3">
+                  <img
+                    src={loggedInUser?.image}
+                    alt="profile"
+                    className="size-10 rounded-full"
+                  />
+                  <p>
+                    {loggedInUser?.firstName + " " + loggedInUser?.lastName}
+                  </p>
+                </li>
               </ul>
             </nav>
           </header>
           {/* Chagned and dynamic */}
-          <section className="p-5">
+          <section className="p-3">
             <Outlet />
           </section>
         </section>
