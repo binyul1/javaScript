@@ -6,7 +6,7 @@ export default function SingleProductGridItem({
 }: Readonly<{ product: IProductDetail }>) {
   const afterDiscountPrice = ( product.price - (product.price * product.discountPercentage) / 100).toFixed(2);
   return (
-    <NavLink to={`/admin/product/${product.id}`} className="group relative block overflow-hidden flex">
+    <NavLink to={`/admin/product/${product.id}`} className="group relative block overflow-hidden border border-gray-200 shadow">
       <button className="absolute inset-e-4 top-4 z-10 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
         <span className="sr-only">Wishlist</span>
 
@@ -29,10 +29,10 @@ export default function SingleProductGridItem({
       <img
         src={product.thumbnail}
         alt=""
-        className="h-64 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-72"
+        className="h-64 w-full transition duration-500 group-hover:scale-105 sm:h-72 p-5 bg-gray-400 shadow-lg" 
       />
 
-      <div className="relative border border-gray-100 bg-white p-6">
+      <div className="relative border border-gray-100 bg-gray-50 p-6">
         <p className="text-gray-700">
           ${afterDiscountPrice}{" "}
           {
@@ -40,7 +40,7 @@ export default function SingleProductGridItem({
           }
         </p>
 
-        <h3 className="mt-1.5 text-lg font-medium text-gray-900">
+        <h3 className="mt-1.5 text-xl text-teal-900 font-semibold">
           {product.title}
         </h3>
 

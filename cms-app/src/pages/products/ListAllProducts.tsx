@@ -1,13 +1,14 @@
 import { NavLink } from "react-router";
 import { PageTitle } from "../../components/page-title/PageTitle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoGridSharp } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { FaThList } from "react-icons/fa";
 
 //data
-import { mockProducts } from "./data";
 import SingleProductGridItem from "../../components/products/SingleProductGridItem";
+import SingleProductSkeleton from "../../components/products/SingleProductSkeleton";
+import axiosInstance from "../../config/apiClient";
 
 export interface IProductDetail {
   id: number;
@@ -49,9 +50,43 @@ export interface IProductDetail {
   images: string[];
 }
 
+export interface IProductListResponse{
+  limit: number, 
+  products: Array<IProductDetail>,
+  skip:number,
+  total: number,
+}
+
 export default function ListAllProducts() {
   const [viewType, setViewType] = useState<string>("grid");
-  const[products] = useState<Array<IProductDetail>>(mockProducts.products as Array<IProductDetail>);
+
+  const [loading, setloading] = useState<boolean>(true);
+  const [products, setProducts] = useState<Array<IProductDetail>>();
+
+
+
+  const getAllProducts = async() => {
+    //api caller
+    try {
+      const response = await axiosInstance.get('/products',{
+        params: {
+          limit: 40,
+          skip:0,
+          select:"id,title,description,category,price,discountPercentage,rating,brand,thumbnail" 
+        }
+      }) as IProductListResponse
+      setloading(false)
+      setProducts(response.products)
+      console.log(response)
+    } catch (exceptation) {
+      console.log(exceptation)
+    }
+  }
+
+  useEffect(()=>{
+    getAllProducts()
+  },[])
+
   return (
     <section className="bg-gray-100 flex flex-col gap-5 p-5">
       <div className="flex w-full justify-between">
@@ -71,6 +106,7 @@ export default function ListAllProducts() {
           </NavLink>
         </div>
       </div>
+
       <div className="w-full flex gap-2 justify-end">
         <span className="size-5" onClick={() => setViewType("grid")}>
           <IoGridSharp className="size-5" />
@@ -80,12 +116,21 @@ export default function ListAllProducts() {
         </span>
       </div>
 
-      <div className={`grid ${viewType === 'grid' ? 'grid-cols-4' : 'grid-cols-1'} gap-2 `}>
-        {
-            products && products.map((prod: IProductDetail, i:number) => {
-                return <SingleProductGridItem product={prod} key={i} />
-            })
-        }
+      <div
+        className={`grid ${viewType === "grid" ? "grid-cols-4" : "grid-cols-1"} gap-2 `}
+      >
+        {loading ? (
+          [...Array(12)].map((_, index) => {
+            return <SingleProductSkeleton key={index} />;
+          })
+        ) : products ? (
+          products &&
+          products.map((prod: IProductDetail, i: number) => {
+            return <SingleProductGridItem product={prod} key={i} />;
+          })
+        ) : (
+          <>No Products Found</>
+        )}
       </div>
     </section>
   );
