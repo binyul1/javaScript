@@ -13,6 +13,7 @@ export const CheckPermission = ({allowed, children}: Readonly<{allowed: string; 
 }
 export default function CheckLogin({children, allowed}: Readonly<{children: ReactNode; allowed: string}>){
     const {loggedInUser} = useAuth();
+    console.log({loggedInUser})
     if(!loggedInUser){
         // if user is not logged in, redirect to login screen
         return <Navigate to="/" />

@@ -15,8 +15,9 @@ import { useAuth } from "../../lib/hook/auth-hook";
 export const LoginForm = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
+
   //using hook form
-  const {control,handleSubmit,formState: { errors }} = useForm<ICredentials>({defaultValues: {username: "",
+  const {control,handleSubmit, formState: { errors, isSubmitting }} = useForm<ICredentials>({defaultValues: {username: "",
       password: "",
     },
     resolver: zodResolver(loginDTO),
@@ -25,7 +26,12 @@ export const LoginForm = () => {
   const submitForm = async (data: ICredentials) => {
     try {
       const userDetail =  await login(data);
-      navigate("/"+userDetail?.role);
+      if(userDetail){
+
+        navigate("/"+userDetail?.role);
+      }else{
+        throw{message:"Error Logging in"}
+      } 
     } catch (exception: unknown) {
       toast.error("Invalid or Wrong Credentials");
       console.log(exception);
@@ -65,8 +71,8 @@ export const LoginForm = () => {
         </RedirectLink>
       </div>
       <div className="flex w-full gap-3">
-        <CancelButton>Reset</CancelButton>
-        <SubmitButton className="text-white bg-teal-800 hover:bg-teal-800/90">
+        <CancelButton disabled={isSubmitting}>Reset</CancelButton>
+        <SubmitButton className="text-white bg-teal-800 hover:bg-teal-800/90" disabled={isSubmitting}>
           Login
         </SubmitButton>
       </div>

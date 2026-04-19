@@ -6,7 +6,7 @@ import type { ICredentials, ILoginResponse, IUserDetail } from "../../types/auth
 
 const AuthProvider = ({ children }: Readonly<{children: ReactNode}>) => {
     const [loggedInUser, setLoggedInUser] = useState<null | IUserDetail>(null);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(true);
 
     const login = async (credentials: ICredentials) => {
         try {
@@ -25,6 +25,7 @@ const AuthProvider = ({ children }: Readonly<{children: ReactNode}>) => {
         try {
             const response = await axiosInstance.get("/auth/me") as IUserDetail
             setLoggedInUser(response);
+            console.log(response)
             return response;
     
         } catch (exception) {

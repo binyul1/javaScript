@@ -5,6 +5,10 @@ import { IoGridSharp } from "react-icons/io5";
 import { LuPlus } from "react-icons/lu";
 import { FaThList } from "react-icons/fa";
 
+//data
+import { mockProducts } from "./data";
+import SingleProductGridItem from "../../components/products/SingleProductGridItem";
+
 export interface IProductDetail {
   id: number;
   title: string;
@@ -47,8 +51,9 @@ export interface IProductDetail {
 
 export default function ListAllProducts() {
   const [viewType, setViewType] = useState<string>("grid");
+  const[products] = useState<Array<IProductDetail>>(mockProducts.products as Array<IProductDetail>);
   return (
-    <section className="bg-gray-100 flex flex-col gap-5 p-5 ">
+    <section className="bg-gray-100 flex flex-col gap-5 p-5">
       <div className="flex w-full justify-between">
         <PageTitle className="text-teal-900">All Product Lists</PageTitle>
         <div className="flex gap-2 w-1/3">
@@ -76,15 +81,11 @@ export default function ListAllProducts() {
       </div>
 
       <div className={`grid ${viewType === 'grid' ? 'grid-cols-4' : 'grid-cols-1'} gap-2 `}>
-        <div className="border bg-white">1</div>
-        <div className="border bg-white">2</div>
-        <div className="border bg-white">3</div>
-        <div className="border bg-white">4</div>
-
-        <div className="border bg-white">5</div>
-        <div className="border bg-white">6</div>
-        <div className="border bg-white">7</div>
-        <div className="border bg-white">8</div>
+        {
+            products && products.map((prod: IProductDetail, i:number) => {
+                return <SingleProductGridItem product={prod} key={i} />
+            })
+        }
       </div>
     </section>
   );
