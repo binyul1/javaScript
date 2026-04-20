@@ -6,6 +6,8 @@ import NotFound from "../pages/errors/NotFound";
 import AdminLayout from "../pages/layout/AdminLayout";
 import CheckLogin from "../components/auth/CheckLogin";
 import ListAllProducts from "../pages/products/ListAllProducts";
+import ProductDetail from "../pages/products/ProductDetail";
+import ProductProvider from "../lib/provider/ProductProvider";
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
@@ -21,8 +23,22 @@ const router = createBrowserRouter([
       { index: true, element: <>Admin Dashboard</> },
 
       //CRUD operations
-      { path: "products", element: <ListAllProducts /> },
-
+      {
+        path: "products",
+        element: (
+          <ProductProvider>
+            <ListAllProducts />
+          </ProductProvider>
+        ),
+      },
+      {
+        path: "product/:productId/detail",
+        element: (
+          <ProductProvider>
+            <ProductDetail />
+          </ProductProvider>
+        ),
+      },
       { path: "*", element: <NotFound url="/admin" /> },
     ],
   },

@@ -6,7 +6,7 @@ export default function SingleProductGridItem({
 }: Readonly<{ product: IProductDetail }>) {
   const afterDiscountPrice = ( product.price - (product.price * product.discountPercentage) / 100).toFixed(2);
   return (
-    <NavLink to={`/admin/product/${product.id}`} className="group relative block overflow-hidden border border-gray-200 shadow">
+    <NavLink to={"/admin/product/"+product.id+"/detail"} className="group relative block overflow-hidden border border-gray-200 shadow">
       <button className="absolute inset-e-4 top-4 z-10 rounded-full bg-white p-1.5 text-gray-900 transition hover:text-gray-900/75">
         <span className="sr-only">Wishlist</span>
 

@@ -283,3 +283,30 @@ ________________________-------------------_____________________
   minimumOrderQuantity: number;
   thumbnail: string;
   images: string[];
+
+
+  ```jsx
+    //Imports at top of your file
+    export interface IComponentNameProps{
+        props1: dataType,
+        props2: dataType
+    }
+    export default function ComponentName({props1,props2 = defaultValue}: Readonly<IComponentNameProps>){
+        const params = useParams()
+        const [query, setQuery] = useSearchParams()
+        const [data, setData] = useState()
+        //states define
+        const networkCaller = async () =>{
+            //access the api server for data
+        } 
+        useEffect(() => {
+            networkCaller()
+        },[])
+        return(<>
+            component's UI
+            List
+            </>
+        )
+
+    }
+  ```
