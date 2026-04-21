@@ -46,10 +46,10 @@ export default function AdminLayout() {
                 </NavLink>
               </li>
               <li className="rounded text-lg font-semibold shadow-lg w-full bg-gray-100 p-2 ">
-                <a href="/admin/orders" className="flex gap-2 items-center">
+                <NavLink to="/admin/order" className={'flex gap-2 items-center'}>
                   <LuShoppingCart className="text-gray-700 size-6" />
                   Orders
-                </a>
+                  </NavLink>
               </li>
             </ul>
           </nav>

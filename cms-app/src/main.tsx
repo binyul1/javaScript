@@ -16,8 +16,8 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <Provider store={store}>
-      <Toaster position="top-right" richColors closeButton />
-      <RouterConfig />
+        <Toaster position="top-right" richColors closeButton />
+        <RouterConfig />
       </Provider>
     </AuthProvider>
   </StrictMode>,
