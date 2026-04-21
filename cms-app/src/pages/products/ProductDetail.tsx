@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { useProduct } from "../../lib/hook/product-hook";
 import { useEffect } from "react";
+import SingleProductDetail from "../../components/products/SingleProductDetail";
 
 export interface IproductDimensionAttribute{
     width: number;
@@ -8,7 +9,7 @@ export interface IproductDimensionAttribute{
     depth: number;
 }
 export interface IProductReview{
-     rating: number;
+    rating: number;
     comment: string;
     date: string;
     reviewerName: string;
@@ -54,8 +55,9 @@ export default function ProductDetail() {
   useEffect(() =>{
     getProductDetail(params.productId)
   },[params, getProductDetail])
-  console.log(detail)
-  return (<>
+  return (<>{
+    detail ? <> <SingleProductDetail product = {detail}/> </> : <>Loading...</>
+  }
     
   </>);
 }

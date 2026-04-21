@@ -310,3 +310,9 @@ ________________________-------------------_____________________
 
     }
   ```
+
+  #### Redux (State Management Tool => Volatile)
+  - Hydrated vs Dehydrated
+  - 3 component
+    - Action (UI - react Application) - (global <small states>) - Reducers(state and action)
+    - 
