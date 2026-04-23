@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { PageTitle } from "../../components/page-title/PageTitle";
-import { SubmitButton, CancelButton } from "../../components/buttons/Button";
+import CouponInput from "../../components/coupon/CouponInput";
 import {
   LuPlus,
   LuSearch,
@@ -8,68 +8,14 @@ import {
   LuUser,
   LuCreditCard,
 } from "react-icons/lu";
-
-// Mock product data
-const mockProducts = [
-  {
-    id: 1,
-    title: "Powder Canister",
-    price: 14.99,
-    sku: "BEA-VEL-POW-003",
-    stock: 89,
-  },
-  {
-    id: 2,
-    title: "Red Lipstick",
-    price: 12.99,
-    sku: "BEA-CHI-LIP-004",
-    stock: 91,
-  },
-  {
-    id: 3,
-    title: "Wireless Headphones",
-    price: 89.99,
-    sku: "ELE-WIR-HEA-001",
-    stock: 45,
-  },
-  {
-    id: 4,
-    title: "Smart Watch",
-    price: 199.99,
-    sku: "ELE-SMA-WAT-002",
-    stock: 23,
-  },
-  {
-    id: 5,
-    title: "Gaming Mouse",
-    price: 29.99,
-    sku: "ELE-GAM-MOU-003",
-    stock: 67,
-  },
-];
-
-// Mock customer data
-const mockCustomers = [
-  { id: 1, name: "John Doe", email: "john@example.com", phone: "+1234567890" },
-  {
-    id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    phone: "+1234567891",
-  },
-  {
-    id: 3,
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    phone: "+1234567892",
-  },
-  {
-    id: 4,
-    name: "Alice Brown",
-    email: "alice@example.com",
-    phone: "+1234567893",
-  },
-];
+import { priceFormat } from "../../lib/utilities/helper";
+import { type AppDispatch, type RootState } from "../../config/store";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllProducts } from "../../lib/reducers/product.reducer";
+import type { IProductDetail } from "../products/ProductDetail";
+import type { IUserDetail } from "../../types/auth-type";
+import { getAllUsers } from "../../lib/reducers/user.reducer";
+import type { CouponCode } from "../../data/couponCodes";
 
 interface OrderItem {
   id: string;
@@ -82,6 +28,15 @@ interface OrderItem {
 }
 
 export default function CreateOrder() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const allProducts = useSelector((rootStore: RootState) => {
+    return rootStore?.product?.allProducts as Array<IProductDetail> | null;
+  });
+  const allUsers = useSelector((rootStore: RootState) => {
+    return rootStore?.user?.allUsers as Array<IUserDetail> | null;
+  });
+
   const [orderItems, setOrderItems] = useState<OrderItem[]>([
     {
       id: "1",
@@ -96,26 +51,40 @@ export default function CreateOrder() {
 
   const [customerSearch, setCustomerSearch] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<
-    (typeof mockCustomers)[0] | null
+    (typeof allUsers)[0] | null
   >(null);
-  const [filteredCustomers, setFilteredCustomers] = useState(mockCustomers);
-  const [discount, setDiscount] = useState(0);
-  const [taxRate, setTaxRate] = useState(13); // 13% tax
+  const [filteredCustomers, setFilteredCustomers] = useState<
+    Array<IUserDetail>
+  >([]);
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponCode | null>(null);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [manualDiscount, setManualDiscount] = useState(0);
+  const [taxRate] = useState(13); // 13% tax
 
   // Filter customers based on search
   useEffect(() => {
-    const filtered = mockCustomers.filter(
-      (customer) =>
-        customer.name.toLowerCase().includes(customerSearch.toLowerCase()) ||
-        customer.email.toLowerCase().includes(customerSearch.toLowerCase()),
-    );
-    setFilteredCustomers(filtered);
-  }, [customerSearch]);
+    if (allUsers) {
+      const filtered = allUsers.filter(
+        (customer) =>
+          customer.firstName
+            .toLowerCase()
+            .includes(customerSearch.toLowerCase()) ||
+          customer.lastName
+            .toLowerCase()
+            .includes(customerSearch.toLowerCase()),
+      );
+      setFilteredCustomers(filtered);
+    } else {
+      setFilteredCustomers([]);
+    }
+  }, [customerSearch, allUsers]);
 
   // Calculate totals
   const subtotal = orderItems.reduce((sum, item) => sum + item.total, 0);
-  const discountAmount = (subtotal * discount) / 100;
-  const taxableAmount = subtotal - discountAmount;
+  const couponDiscountAmount = couponDiscount;
+  const manualDiscountAmount = (subtotal * manualDiscount) / 100;
+  const totalDiscountAmount = couponDiscountAmount + manualDiscountAmount;
+  const taxableAmount = subtotal - totalDiscountAmount;
   const taxAmount = (taxableAmount * taxRate) / 100;
   const grandTotal = taxableAmount + taxAmount;
 
@@ -140,7 +109,7 @@ export default function CreateOrder() {
 
           // Auto-fill product details when product is selected
           if (field === "productId" && value) {
-            const product = mockProducts.find((p) => p.id === value);
+            const product = allProducts?.find((p) => p.id === value);
             if (product) {
               updatedItem.productName = product.title;
               updatedItem.sku = product.sku;
@@ -166,12 +135,23 @@ export default function CreateOrder() {
     }
   };
 
+  const handleCouponApplied = (
+    coupon: CouponCode | null,
+    discountAmount: number,
+  ) => {
+    setAppliedCoupon(coupon);
+    setCouponDiscount(discountAmount);
+  };
+
   const handlePlaceOrder = () => {
     console.log("Placing order:", {
       customer: selectedCustomer,
       items: orderItems,
       subtotal,
-      discount: discountAmount,
+      coupon: appliedCoupon,
+      couponDiscount: couponDiscountAmount,
+      manualDiscount: manualDiscountAmount,
+      totalDiscount: totalDiscountAmount,
       tax: taxAmount,
       total: grandTotal,
     });
@@ -184,36 +164,38 @@ export default function CreateOrder() {
     });
   };
 
+  useEffect(() => {
+    dispatch(getAllProducts({ limit: 198, skip: 0 }));
+    dispatch(getAllUsers({ limit: 208, skip: 0 }));
+  }, []);
+
   return (
     <div className="p-6 bg-stone-50 min-h-screen">
-      <div className="mb-6">
-        <PageTitle className="text-teal-900 text-left text-3xl">
-          Create New Order
-        </PageTitle>
-      </div>
+      <PageTitle className="text-teal-900 text-left text-3xl mb-6">
+        Create New Order
+      </PageTitle>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Column - Order Items (75% width) */}
         <div className="lg:col-span-3">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            {/* Order Items Table */}
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/3">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-1/3">
                       Product
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-20">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-20">
                       Unit
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-24">
                       Rate
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-24">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-24">
                       Total
                     </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-16">
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-16">
                       Action
                     </th>
                   </tr>
@@ -235,7 +217,7 @@ export default function CreateOrder() {
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
                           >
                             <option value={0}>Select Product</option>
-                            {mockProducts.map((product) => (
+                            {allProducts?.map((product) => (
                               <option key={product.id} value={product.id}>
                                 {product.title} - ${product.price}
                               </option>
@@ -264,35 +246,31 @@ export default function CreateOrder() {
                         />
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center">
-                          <span className="text-gray-500 mr-1">$</span>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={item.rate}
-                            onChange={(e) =>
-                              updateOrderItem(
-                                item.id,
-                                "rate",
-                                parseFloat(e.target.value) || 0,
-                              )
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
-                          />
-                        </div>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.rate}
+                          onChange={(e) =>
+                            updateOrderItem(
+                              item.id,
+                              "rate",
+                              parseFloat(e.target.value) || 0,
+                            )
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                        />
                       </td>
                       <td className="px-4 py-3">
                         <div className="text-sm font-semibold text-gray-900">
-                          ${item.total.toFixed(2)}
+                          {priceFormat(item.total.toFixed(2))}
                         </div>
                       </td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => removeOrderItem(item.id)}
                           disabled={orderItems.length === 1}
-                          className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 transition-colors duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
-                          title="Remove Item"
+                          className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           <LuTrash2 className="w-4 h-4" />
                         </button>
@@ -303,63 +281,86 @@ export default function CreateOrder() {
               </table>
             </div>
 
-            {/* Add More Button */}
             <div className="p-4 border-t border-gray-200">
               <button
                 onClick={addNewRow}
-                className="flex items-center gap-2 text-teal-600 hover:text-teal-800 font-medium transition-colors duration-200"
+                className="flex items-center gap-2 text-teal-600 hover:text-teal-800"
               >
                 <LuPlus className="w-4 h-4" />
                 Add More Items
               </button>
             </div>
 
-            {/* Bill Footer */}
             <div className="border-t-2 border-gray-300 bg-gray-50">
               <div className="p-6 space-y-3">
-                {/* Subtotal */}
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-gray-600">Subtotal:</span>
                   <span className="font-semibold text-gray-900">
-                    ${subtotal.toFixed(2)}
+                    {priceFormat(subtotal)}
                   </span>
                 </div>
 
-                {/* Discount */}
+                {appliedCoupon && couponDiscountAmount > 0 && (
+                  <div className="flex justify-between items-center text-sm">
+                    <div className="flex items-center gap-2">
+                      <span className="text-gray-600">
+                        Coupon ({appliedCoupon.code}):
+                      </span>
+                    </div>
+                    <span className="font-semibold text-green-600">
+                      - {priceFormat(couponDiscountAmount.toFixed(2))}
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-600">Discount (%):</span>
+                    <span className="text-gray-600">
+                      Additional Discount (%):
+                    </span>
                     <input
                       type="number"
                       min="0"
                       max="100"
-                      value={discount}
+                      value={manualDiscount}
                       onChange={(e) =>
-                        setDiscount(parseFloat(e.target.value) || 0)
+                        setManualDiscount(parseFloat(e.target.value) || 0)
                       }
                       className="w-16 px-2 py-1 border border-gray-300 rounded text-xs text-center"
+                      placeholder="0"
                     />
                   </div>
-                  <span className="font-semibold text-green-600">
-                    -${discountAmount.toFixed(2)}
-                  </span>
+                  {manualDiscountAmount > 0 && (
+                    <span className="font-semibold text-green-600">
+                      - {priceFormat(manualDiscountAmount.toFixed(2))}
+                    </span>
+                  )}
                 </div>
 
-                {/* Tax */}
+                {totalDiscountAmount > 0 && (
+                  <div className="flex justify-between items-center text-sm border-t border-gray-200 pt-2">
+                    <span className="text-gray-600 font-medium">
+                      Total Discount:
+                    </span>
+                    <span className="font-semibold text-green-600">
+                      - {priceFormat(totalDiscountAmount.toFixed(2))}
+                    </span>
+                  </div>
+                )}
+
                 <div className="flex justify-between items-center text-sm">
                   <div className="flex items-center gap-2">
                     <span className="text-gray-600">Tax ({taxRate}%):</span>
                   </div>
                   <span className="font-semibold text-gray-900">
-                    ${taxAmount.toFixed(2)}
+                    {priceFormat(taxAmount.toFixed(2))}
                   </span>
                 </div>
 
-                {/* Total */}
                 <div className="flex justify-between items-center text-lg font-bold border-t border-gray-300 pt-3">
                   <span className="text-gray-900">Total:</span>
                   <span className="text-teal-800">
-                    ${grandTotal.toFixed(2)}
+                    {priceFormat(grandTotal.toFixed(2))}
                   </span>
                 </div>
               </div>
@@ -369,14 +370,20 @@ export default function CreateOrder() {
 
         {/* Right Column - Customer & Actions (25% width) */}
         <div className="lg:col-span-1 space-y-6">
-          {/* Customer Selection */}
+          {/* Coupon Code Section */}
+          <CouponInput
+            subtotal={subtotal}
+            onCouponApplied={handleCouponApplied}
+            appliedCoupon={appliedCoupon}
+            appliedDiscount={couponDiscount}
+          />
+
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
               <LuUser className="w-5 h-5" />
               Customer Details
             </h3>
 
-            {/* Customer Search */}
             <div className="mb-4">
               <label
                 htmlFor="customer-search"
@@ -397,20 +404,19 @@ export default function CreateOrder() {
               </div>
             </div>
 
-            {/* Customer List */}
             <div className="space-y-2 max-h-48 overflow-y-auto">
-              {filteredCustomers.map((customer) => (
+              {filteredCustomers?.map((customer) => (
                 <div
                   key={customer.id}
                   onClick={() => setSelectedCustomer(customer)}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 ${
+                  className={`p-3 rounded-lg border cursor-pointer ${
                     selectedCustomer?.id === customer.id
                       ? "border-teal-500 bg-teal-50"
                       : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
                   }`}
                 >
                   <div className="font-medium text-gray-900">
-                    {customer.name}
+                    {customer.firstName} {customer.lastName}
                   </div>
                   <div className="text-sm text-gray-500">{customer.email}</div>
                   <div className="text-sm text-gray-500">{customer.phone}</div>
@@ -418,23 +424,18 @@ export default function CreateOrder() {
               ))}
             </div>
 
-            {/* Selected Customer Display */}
             {selectedCustomer && (
               <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg">
                 <div className="text-sm font-medium text-teal-900">
                   Selected Customer:
                 </div>
                 <div className="text-sm text-teal-800">
-                  {selectedCustomer.name}
-                </div>
-                <div className="text-sm text-teal-700">
-                  {selectedCustomer.email}
+                  {selectedCustomer.firstName} {selectedCustomer.lastName}
                 </div>
               </div>
             )}
           </div>
 
-          {/* Order Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Order Actions
@@ -448,7 +449,7 @@ export default function CreateOrder() {
                   orderItems.length === 0 ||
                   grandTotal === 0
                 }
-                className="w-full bg-teal-800 hover:bg-teal-800/90 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-teal-800 hover:bg-teal-800/90 text-white px-4 py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Place Order
               </button>
@@ -460,7 +461,7 @@ export default function CreateOrder() {
                   orderItems.length === 0 ||
                   grandTotal === 0
                 }
-                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <LuCreditCard className="w-5 h-5" />
                 Proceed to Pay
