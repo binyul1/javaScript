@@ -1,475 +1,285 @@
-import { useState, useEffect } from "react";
-import { PageTitle } from "../../components/page-title/PageTitle";
-import CouponInput from "../../components/coupon/CouponInput";
-import {
-  LuPlus,
-  LuSearch,
-  LuTrash2,
-  LuUser,
-  LuCreditCard,
-} from "react-icons/lu";
+import { useEffect, useState, type BaseSyntheticEvent } from "react";
 import { priceFormat } from "../../lib/utilities/helper";
-import { type AppDispatch, type RootState } from "../../config/store";
 import { useDispatch, useSelector } from "react-redux";
+import { type AppDispatch, type RootState } from "../../config/store";
 import { getAllProducts } from "../../lib/reducers/product.reducer";
 import type { IProductDetail } from "../products/ProductDetail";
-import type { IUserDetail } from "../../types/auth-type";
-import { getAllUsers } from "../../lib/reducers/user.reducer";
-import type { CouponCode } from "../../data/couponCodes";
 
-interface OrderItem {
-  id: string;
-  productId: number;
-  productName: string;
-  sku: string;
-  unit: number;
-  rate: number;
-  total: number;
-}
+import Select from "react-select"
+import { type IUserDetail } from "../../types/auth-type";
+import axiosInstance from "../../config/apiClient";
+import { submitCart, type ISingleCartItem } from "../../lib/reducers/cart.reducer";
+
 
 export default function CreateOrder() {
   const dispatch = useDispatch<AppDispatch>();
+  const [prodOpts, setProdOpts] = useState<Array<{ label: string; value: number }>>();
+  
+  const [userLists, setUserLists] = useState<Array<{value: number, label: string}>>();
+  const [selectedUser, setSelectedUser] = useState<number>()
 
   const allProducts = useSelector((rootStore: RootState) => {
-    return rootStore?.product?.allProducts as Array<IProductDetail> | null;
-  });
-  const allUsers = useSelector((rootStore: RootState) => {
-    return rootStore?.user?.allUsers as Array<IUserDetail> | null;
+    return rootStore?.product?.allProducts as Array<IProductDetail>;
   });
 
-  const [orderItems, setOrderItems] = useState<OrderItem[]>([
-    {
-      id: "1",
-      productId: 0,
-      productName: "",
-      sku: "",
-      unit: 1,
-      rate: 0,
-      total: 0,
-    },
+  useEffect(() => {
+    let allopts: Array<{ label: string; value: number }> = [];
+    if (allProducts) {
+      allopts = allProducts.map((singleProd) => {
+        return { label: singleProd.title, value: singleProd.id };
+      });
+      setProdOpts(allopts);
+    }
+  }, [allProducts]);
+
+  // State for order rows
+  const [orderRows, setOrderRows] = useState<Array<ISingleCartItem>>([
+    { id: Date.now(), product: "", unit: 1, rate: 0 },
   ]);
-
-  const [customerSearch, setCustomerSearch] = useState("");
-  const [selectedCustomer, setSelectedCustomer] = useState<
-    (typeof allUsers)[0] | null
-  >(null);
-  const [filteredCustomers, setFilteredCustomers] = useState<
-    Array<IUserDetail>
-  >([]);
-  const [appliedCoupon, setAppliedCoupon] = useState<CouponCode | null>(null);
-  const [couponDiscount, setCouponDiscount] = useState(0);
-  const [manualDiscount, setManualDiscount] = useState(0);
-  const [taxRate] = useState(13); // 13% tax
-
-  // Filter customers based on search
-  useEffect(() => {
-    if (allUsers) {
-      const filtered = allUsers.filter(
-        (customer) =>
-          customer.firstName
-            .toLowerCase()
-            .includes(customerSearch.toLowerCase()) ||
-          customer.lastName
-            .toLowerCase()
-            .includes(customerSearch.toLowerCase()),
-      );
-      setFilteredCustomers(filtered);
-    } else {
-      setFilteredCustomers([]);
-    }
-  }, [customerSearch, allUsers]);
-
-  // Calculate totals
-  const subtotal = orderItems.reduce((sum, item) => sum + item.total, 0);
-  const couponDiscountAmount = couponDiscount;
-  const manualDiscountAmount = (subtotal * manualDiscount) / 100;
-  const totalDiscountAmount = couponDiscountAmount + manualDiscountAmount;
-  const taxableAmount = subtotal - totalDiscountAmount;
-  const taxAmount = (taxableAmount * taxRate) / 100;
-  const grandTotal = taxableAmount + taxAmount;
-
-  const addNewRow = () => {
-    const newRow: OrderItem = {
-      id: Date.now().toString(),
-      productId: 0,
-      productName: "",
-      sku: "",
-      unit: 1,
-      rate: 0,
-      total: 0,
-    };
-    setOrderItems([...orderItems, newRow]);
-  };
-
-  const updateOrderItem = (id: string, field: keyof OrderItem, value: any) => {
-    setOrderItems(
-      orderItems.map((item) => {
-        if (item.id === id) {
-          const updatedItem = { ...item, [field]: value };
-
-          // Auto-fill product details when product is selected
-          if (field === "productId" && value) {
-            const product = allProducts?.find((p) => p.id === value);
-            if (product) {
-              updatedItem.productName = product.title;
-              updatedItem.sku = product.sku;
-              updatedItem.rate = product.price;
-            }
-          }
-
-          // Recalculate total when unit or rate changes
-          if (field === "unit" || field === "rate" || field === "productId") {
-            updatedItem.total = updatedItem.unit * updatedItem.rate;
-          }
-
-          return updatedItem;
-        }
-        return item;
-      }),
-    );
-  };
-
-  const removeOrderItem = (id: string) => {
-    if (orderItems.length > 1) {
-      setOrderItems(orderItems.filter((item) => item.id !== id));
-    }
-  };
-
-  const handleCouponApplied = (
-    coupon: CouponCode | null,
-    discountAmount: number,
+  const [discount, setDiscount] = useState(0);
+  // Handlers
+  const handleRowChange = (
+    idx: number,
+    key: string,
+    value: string | number,
   ) => {
-    setAppliedCoupon(coupon);
-    setCouponDiscount(discountAmount);
-  };
-
-  const handlePlaceOrder = () => {
-    console.log("Placing order:", {
-      customer: selectedCustomer,
-      items: orderItems,
-      subtotal,
-      coupon: appliedCoupon,
-      couponDiscount: couponDiscountAmount,
-      manualDiscount: manualDiscountAmount,
-      totalDiscount: totalDiscountAmount,
-      tax: taxAmount,
-      total: grandTotal,
+    setOrderRows((rows) => {
+      return rows.map((row, i) => (i === idx ? { ...row, [key]: value } : row));
     });
   };
-
-  const handleProceedToPay = () => {
-    console.log("Proceeding to payment:", {
-      customer: selectedCustomer,
-      total: grandTotal,
-    });
+  const addRow = () => {
+    setOrderRows((rows) => [
+      ...rows,
+      {
+        id: Date.now() + Math.random(),
+        product: "",
+        unit: 1,
+        rate: 0,
+      },
+    ]);
   };
+  const removeRow = (idx: number) => {
+    setOrderRows((rows) => rows.filter((_, i) => i !== idx));
+  };
+  // Calculate totals
+  const subtotal = orderRows.reduce(
+    (acc, row) => acc + Number(row.unit) * Number(row.rate),
+    0,
+  );
+  const tax = (subtotal - Number(discount)) * 0.13;
+  const total = subtotal - Number(discount) + Number(tax);
 
+  // for user list
+  const getAllUserList = async (search: string='') => {
+    try {
+      const response = await axiosInstance.get("/users", {
+        params: {
+          q: search,
+          limit: 208
+        }
+      }) as {users: Array<IUserDetail>, skip: number, total: number, limit: number}
+      const filteredUsers = response.users.map((user:IUserDetail) => {
+        return {value: user.id, label: user.firstName+" "+user.lastName}
+      })
+      setUserLists(filteredUsers)
+    } catch(exception) {
+      console.log(exception)
+    }
+  }
+
+  // first load
   useEffect(() => {
+    getAllUserList();
     dispatch(getAllProducts({ limit: 198, skip: 0 }));
-    dispatch(getAllUsers({ limit: 208, skip: 0 }));
   }, []);
 
   return (
-    <div className="p-6 bg-stone-50 min-h-screen">
-      <PageTitle className="text-teal-900 text-left text-3xl mb-6">
-        Create New Order
-      </PageTitle>
+    <>
+      <div className="flex gap-8 w-full">
+        {/* First Column: Bill Section/Table (75%) */}
+        <div className="w-3/4">
+          <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-gray-200">
+            <div className="flex w-full justify-between items-center py-3">
+              <h2 className="text-2xl font-bold text-teal-900">
+                Create Order (Bill)
+              </h2>
+              <button
+                type="button"
+                className="px-2 py-1 text-green-700 hover:text-white hover:bg-green-700 border rounded transition w-100"
+                title="Add New Line"
+                onClick={addRow}
+              >
+                + Add
+              </button>
+            </div>
+              <div className="overflow-x-auto">
+                <table className="w-full table-auto mb-4">
+                  <thead>
+                    <tr className="bg-gray-100 text-teal-900">
+                      <th className="p-3 text-left">Product</th>
+                      <th className="p-3 text-left">Unit</th>
+                      <th className="p-3 text-left">Rate</th>
+                      <th className="p-3 text-left">Total</th>
+                      <th className="p-3"></th>
+                    </tr>
+                  </thead>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Column - Order Items (75% width) */}
-        <div className="lg:col-span-3">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-100 border-b border-gray-200">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-1/3">
-                      Product
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-20">
-                      Unit
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-24">
-                      Rate
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-24">
-                      Total
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase w-16">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {orderItems.map((item, index) => (
-                    <tr key={item.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        <div className="space-y-2">
-                          <select
-                            value={item.productId}
+                  <tbody>
+                    {orderRows.map((row, idx) => (
+                      <tr key={row.id} className="border-b">
+                        <td className="p-2">
+                          {/* Product Search/Input */}
+                          <Select
+                            options={prodOpts}
+                            onChange={(
+                              e: { label: string; value: number } | null,
+                            ) => {
+                              if (e) {
+                                handleRowChange(idx, "product", e.value);
+                                const selectedProduct:
+                                  | Array<IProductDetail>
+                                  | undefined = allProducts?.filter(
+                                  (row: IProductDetail) => row.id === e.value,
+                                );
+
+                                if (selectedProduct) {
+                                  handleRowChange(
+                                    idx,
+                                    "rate",
+                                    Math.max(0, selectedProduct[0].price),
+                                  );
+                                }
+                              }
+                            }}
+                            className="w-full rounded px-2 py-1 focus:ring-2 focus:ring-teal-400"
+                          />
+                        </td>
+                        <td className="p-2">
+                          {/* Unit */}
+                          <input
+                            type="number"
+                            min="1"
+                            value={row.unit}
+                            className="w-20 border border-gray-300 rounded px-2 py-1 text-center"
                             onChange={(e) =>
-                              updateOrderItem(
-                                item.id,
-                                "productId",
-                                parseInt(e.target.value),
+                              handleRowChange(
+                                idx,
+                                "unit",
+                                Math.max(1, +e.target.value),
                               )
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
-                          >
-                            <option value={0}>Select Product</option>
-                            {allProducts?.map((product) => (
-                              <option key={product.id} value={product.id}>
-                                {product.title} - ${product.price}
-                              </option>
-                            ))}
-                          </select>
-                          {item.sku && (
-                            <div className="text-xs text-gray-500">
-                              SKU: {item.sku}
-                            </div>
+                          />
+                        </td>
+                        <td className="p-2">
+                          <div className="w-24 text-right font-semibold text-teal-900">
+                            {priceFormat(Number(row.rate))}
+                          </div>
+                        </td>
+                        <td className="p-2">
+                          {/* Total */}
+                          <div className="w-24 text-right font-semibold text-teal-900">
+                            {priceFormat(Number(row.unit) * Number(row.rate))}
+                          </div>
+                        </td>
+                        <td className="p-2 flex gap-1">
+                          {/* Add new row if last row */}
+                          {orderRows.length > 1 && (
+                            <button
+                              type="button"
+                              className="size-7 text-red-600 hover:text-white hover:bg-red-700 border rounded-full transition"
+                              title="Remove Row"
+                              onClick={() => removeRow(idx)}
+                            >
+                              X
+                            </button>
                           )}
-                        </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+                      <td colSpan={3} className="text-right font-semibold p-2">
+                        Subtotal
                       </td>
-                      <td className="px-4 py-3">
-                        <input
-                          type="number"
-                          min="1"
-                          value={item.unit}
-                          onChange={(e) =>
-                            updateOrderItem(
-                              item.id,
-                              "unit",
-                              parseInt(e.target.value) || 1,
-                            )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm text-center"
-                        />
+                      <td className="text-right p-2">
+                        {priceFormat(subtotal)}
                       </td>
-                      <td className="px-4 py-3">
+                      <td></td>
+                    </tr>
+                    <tr>
+                      <td colSpan={3} className="text-right font-semibold p-2">
+                        Discount
+                      </td>
+                      <td className="text-right p-2">
                         <input
                           type="number"
                           min="0"
-                          step="0.01"
-                          value={item.rate}
-                          onChange={(e) =>
-                            updateOrderItem(
-                              item.id,
-                              "rate",
-                              parseFloat(e.target.value) || 0,
-                            )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
+                          value={discount}
+                          className="w-20 border border-gray-300 rounded px-2 py-1 text-right"
+                          placeholder="0.00"
+                          onChange={(e) => setDiscount(Number(e.target.value))}
                         />
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="text-sm font-semibold text-gray-900">
-                          {priceFormat(item.total.toFixed(2))}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <button
-                          onClick={() => removeOrderItem(item.id)}
-                          disabled={orderItems.length === 1}
-                          className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          <LuTrash2 className="w-4 h-4" />
-                        </button>
-                      </td>
+                      <td></td>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="p-4 border-t border-gray-200">
-              <button
-                onClick={addNewRow}
-                className="flex items-center gap-2 text-teal-600 hover:text-teal-800"
-              >
-                <LuPlus className="w-4 h-4" />
-                Add More Items
-              </button>
-            </div>
-
-            <div className="border-t-2 border-gray-300 bg-gray-50">
-              <div className="p-6 space-y-3">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-semibold text-gray-900">
-                    {priceFormat(subtotal)}
-                  </span>
-                </div>
-
-                {appliedCoupon && couponDiscountAmount > 0 && (
-                  <div className="flex justify-between items-center text-sm">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-600">
-                        Coupon ({appliedCoupon.code}):
-                      </span>
-                    </div>
-                    <span className="font-semibold text-green-600">
-                      - {priceFormat(couponDiscountAmount.toFixed(2))}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex justify-between items-center text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600">
-                      Additional Discount (%):
-                    </span>
-                    <input
-                      type="number"
-                      min="0"
-                      max="100"
-                      value={manualDiscount}
-                      onChange={(e) =>
-                        setManualDiscount(parseFloat(e.target.value) || 0)
-                      }
-                      className="w-16 px-2 py-1 border border-gray-300 rounded text-xs text-center"
-                      placeholder="0"
-                    />
-                  </div>
-                  {manualDiscountAmount > 0 && (
-                    <span className="font-semibold text-green-600">
-                      - {priceFormat(manualDiscountAmount.toFixed(2))}
-                    </span>
-                  )}
-                </div>
-
-                {totalDiscountAmount > 0 && (
-                  <div className="flex justify-between items-center text-sm border-t border-gray-200 pt-2">
-                    <span className="text-gray-600 font-medium">
-                      Total Discount:
-                    </span>
-                    <span className="font-semibold text-green-600">
-                      - {priceFormat(totalDiscountAmount.toFixed(2))}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex justify-between items-center text-sm">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-600">Tax ({taxRate}%):</span>
-                  </div>
-                  <span className="font-semibold text-gray-900">
-                    {priceFormat(taxAmount.toFixed(2))}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center text-lg font-bold border-t border-gray-300 pt-3">
-                  <span className="text-gray-900">Total:</span>
-                  <span className="text-teal-800">
-                    {priceFormat(grandTotal.toFixed(2))}
-                  </span>
-                </div>
+                    <tr>
+                      <td colSpan={3} className="text-right font-semibold p-2">
+                        Tax(13%)
+                      </td>
+                      <td className="text-right p-2">{priceFormat(tax)}</td>
+                      <td></td>
+                    </tr>
+                    <tr className="bg-gray-100">
+                      <td
+                        colSpan={3}
+                        className="text-right font-bold text-lg p-2"
+                      >
+                        Total
+                      </td>
+                      <td className="text-right font-bold text-lg p-2 text-teal-900">
+                        {priceFormat(total)}
+                      </td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
+                </table>
               </div>
-            </div>
           </div>
         </div>
 
-        {/* Right Column - Customer & Actions (25% width) */}
-        <div className="lg:col-span-1 space-y-6">
-          {/* Coupon Code Section */}
-          <CouponInput
-            subtotal={subtotal}
-            onCouponApplied={handleCouponApplied}
-            appliedCoupon={appliedCoupon}
-            appliedDiscount={couponDiscount}
-          />
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <LuUser className="w-5 h-5" />
-              Customer Details
-            </h3>
-
-            <div className="mb-4">
-              <label
-                htmlFor="customer-search"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                Search Customer
-              </label>
-              <div className="relative">
-                <LuSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  id="customer-search"
-                  type="text"
-                  placeholder="Search by name or email..."
-                  value={customerSearch}
-                  onChange={(e) => setCustomerSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm"
-                />
-              </div>
+        {/* Second Column: Customer & Actions (25%) */}
+        <div className="w-1/4">
+          <div className="bg-white rounded-lg shadow-xl p-6 border-2 border-teal-100 flex flex-col gap-6">
+            <div>
+              <h3 className="text-lg font-semibold text-teal-900 mb-2">
+                Customer
+              </h3>
+              <Select 
+                options={userLists} 
+                onChange={(e) => {
+                  if(e) {
+                    setSelectedUser(e.value as number);
+                  }
+                }}
+              />
             </div>
-
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {filteredCustomers?.map((customer) => (
-                <div
-                  key={customer.id}
-                  onClick={() => setSelectedCustomer(customer)}
-                  className={`p-3 rounded-lg border cursor-pointer ${
-                    selectedCustomer?.id === customer.id
-                      ? "border-teal-500 bg-teal-50"
-                      : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  <div className="font-medium text-gray-900">
-                    {customer.firstName} {customer.lastName}
-                  </div>
-                  <div className="text-sm text-gray-500">{customer.email}</div>
-                  <div className="text-sm text-gray-500">{customer.phone}</div>
-                </div>
-              ))}
-            </div>
-
-            {selectedCustomer && (
-              <div className="mt-4 p-3 bg-teal-50 border border-teal-200 rounded-lg">
-                <div className="text-sm font-medium text-teal-900">
-                  Selected Customer:
-                </div>
-                <div className="text-sm text-teal-800">
-                  {selectedCustomer.firstName} {selectedCustomer.lastName}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Order Actions
-            </h3>
-
-            <div className="space-y-3">
-              <button
-                onClick={handlePlaceOrder}
-                disabled={
-                  !selectedCustomer ||
-                  orderItems.length === 0 ||
-                  grandTotal === 0
-                }
-                className="w-full bg-teal-800 hover:bg-teal-800/90 text-white px-4 py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Place Order
-              </button>
-
-              <button
-                onClick={handleProceedToPay}
-                disabled={
-                  !selectedCustomer ||
-                  orderItems.length === 0 ||
-                  grandTotal === 0
-                }
-                className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <LuCreditCard className="w-5 h-5" />
-                Proceed to Pay
-              </button>
-            </div>
+            <button
+              onClick={(e: BaseSyntheticEvent) => {
+                e.preventDefault()
+                dispatch(submitCart({cartItems: orderRows, selectedUser: selectedUser as number}))
+              }}
+              className="w-full py-3 bg-teal-600 text-white rounded-lg font-semibold text-lg shadow hover:bg-teal-700 transition mb-2"
+            >
+              Place Order
+            </button>
+            <button className="w-full py-3 bg-indigo-900 text-white rounded-lg font-semibold text-lg shadow hover:bg-indigo-950 transition">
+              Pay with Khalti
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
