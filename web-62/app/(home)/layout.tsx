@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import {Poppins} from "next/font/google"
-import "./globals.css";
+import "../globals.css";
 import HomeHeader from "@/components/header/HomeHeader";
 
 const PoppinsSans = Poppins({
@@ -36,7 +36,10 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body className={`${PoppinsSans.variable} min-h-full flex flex-col antialiased`}>
         <HomeHeader />
+        
         {children}
+
+        <footer></footer>
       </body>
     </html>
   );

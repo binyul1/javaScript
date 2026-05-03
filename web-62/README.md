@@ -15,3 +15,25 @@
             - `default.tsx`   
     - Every file has by default a `serverside render component`
     - You cannot use any react hook inside `server side component`
+
+## Nextjs Components
+    - `Server Side Component` (default)
+    - `Client Side Component`
+        - `use client;` directive use at top of your component
+
+## For Routing
+    - ```jsx
+       /app
+            /<folder>
+            /(<folder>)
+                layout.tsx
+                /<routeFolder>
+                different path (different layout)
+            /[:<folder>]
+                parameterized routes
+            layout.tsx    
+            // UI load
+            layout
+                layout
+                    RouterFolder page.tsx
+    ```

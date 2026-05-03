@@ -24,57 +24,57 @@ export default function HomeHeader() {
               <nav aria-label="Global">
                 <ul className="flex items-center gap-6 text-sm">
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/about-us"
                     >
                       About
-                    </a>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/careers"
                     >
                       Careers
-                    </a>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/history"
                     >
                       History
-                    </a>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/services"
                     >
                       Services
-                    </a>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/projects"
                     >
                       Projects
-                    </a>
+                    </Link>
                   </li>
 
                   <li>
-                    <a
+                    <Link
                       className="text-gray-500 transition hover:text-gray-500/75 dark:text-white dark:hover:text-white/75"
-                      href="#"
+                      href="/blog"
                     >
                       Blog
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </nav>
