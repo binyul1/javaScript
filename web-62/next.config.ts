@@ -8,6 +8,17 @@ const nextConfig: NextConfig = {
         hostname:"placehold.co",
       }
     ]
+  },
+  // environment
+  env:{},
+  // headers : () => {
+  //   return []
+  // }
+  // cacheHandler : "./cache-handler.js"
+  logging : {
+    fetches :{
+      fullUrl: true,
+    }
   }
 };
 

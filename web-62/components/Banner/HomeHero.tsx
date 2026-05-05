@@ -52,7 +52,6 @@ export default function HomeHero() {
             className="w-full h-100"
           />
         </SwiperSlide>
-        ...
       </Swiper>
     </section>
   );

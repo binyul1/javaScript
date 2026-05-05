@@ -37,3 +37,7 @@
                 layout
                     RouterFolder page.tsx
     ```
+
+### Grouped Routing
+    - `if a folder is created using (foldername) => this is just a file/folder gorup but not route`
+    - this `(foldername)` can have `layout.tsx` file
