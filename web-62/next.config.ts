@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
     remotePatterns:[
       {
         hostname:"placehold.co",
+      
+      },
+      {
+        hostname:"cdn.dummyjson.com",
       }
     ]
   },
