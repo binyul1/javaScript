@@ -1,6 +1,15 @@
 import { ProductGridItems } from "@/components/Product/ProductGridItems";
+import { BASE_URL } from "@/lib/config/app";
+import type { Metadata } from "next";
 import Link from "next/link";
 
+// export const generatemetadata = async ():Promise<Metadata> => {
+//   const response = await fetch (BASE_URL + "products/1");
+//   return{
+//     title: product.title,
+// } as Metadata;
+
+// }
 export default function ProductList() {
   return (
     <>
