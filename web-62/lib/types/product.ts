@@ -42,3 +42,10 @@ export interface ProductMeta {
   barcode: string;
   qrCode: string;
 }
+
+export interface IProductListResponse {
+  skip: number;
+  limit: number;
+  total: number;
+  products: Array<IProductDetail>;
+}

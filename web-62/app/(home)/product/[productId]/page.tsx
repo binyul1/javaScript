@@ -1,12 +1,8 @@
-import type { Metadata } from "next";
-
-//metadata
-export const metadata:Metadata = {}
+import React from 'react'
 
 export default function ProductDetail() {
   return (
-    <>
-      <h1>Product Detail Page</h1>
-    </>
-  );
+    <div>Product Detail</div>
+  )
 }
+    

@@ -1,3 +1,4 @@
+"use client";
 import type { IProductDetail } from "@/lib/types/product";
 import Image from "next/image";
 import Link from "next/link";
@@ -5,6 +6,7 @@ import Link from "next/link";
 export const SingleProductItem = ({
   detail,
 }: Readonly<{ detail: IProductDetail }>) => {
+
   return (
     <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-sm ">
       <div className="h-56 w-full">
