@@ -136,3 +136,14 @@ Setting up an express project with nodejs
 ## Step 8
     - Run your codebase
     - in terminal from root location run `> pnpm dev`
+
+## System Architecture
+    - Logic/Application login
+    - Data logic (Database logic)
+    - Present
+    - Model . View . Controller
+
+    ```
+    Request <===> Router <===> Controller <===> Model <===> DB Operation
+                                        ========> 
+    ```
