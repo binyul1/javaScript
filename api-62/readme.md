@@ -13,7 +13,7 @@ Setting up an express project with nodejs
     - `> pnpm init`
 
 ## Step 3
-
+    - (npm i express@5.2.1 dotenv@16.4.7 cors@2.8.5 @clerk/express@2.1.0 @clerk/backend@3.2.8 @imagekit/nodejs@7.4.0 @sentry/node@10.48.0 @sentry/profiling-node@10.48.0 drizzle-orm@0.39.3 pg@8.13.1 standardwebhooks@1.0.0 stream-chat@8.57.6 zod@3.24.2)
     - Install Dependencies and Dev Dependencies
     - `> pnpm install express`
     - `> pnpm install --save-dev @type/node typescript ts-node nodemon @type/express`
@@ -144,6 +144,25 @@ Setting up an express project with nodejs
     - Model . View . Controller
 
     ```
-    Request <===> Router <===> Controller <===> Model <===> DB Operation
-                                        ========> 
+    Request ===> Router ===> Controller(business logic) <===> Model <===> DB Operation
+                                        ========> JSON response ()
     ```
+
+    ```
+        -src/
+            -modules/
+                -auth/
+                    -AuthController.ts
+                    -AuthModel.ts
+                    -AuthRouter.ts
+                    -AuthRequest.ts
+                    -AuthService.ts
+                
+
+        -src/
+            -controller
+                -AuthController.ts
+            -Request
+                -AuthRequest.ts
+            -Router
+                -AuthRouter.ts
