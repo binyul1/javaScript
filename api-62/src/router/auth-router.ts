@@ -1,17 +1,18 @@
 import { Router } from "express";
-import AuthController from "../controller/AuthController";
-import AuthCheck from "../middleware/Auth";
 import { bodyValidator } from "../middleware/Validator";
+import AuthCheck from "../middleware/Auth";
+import AuthController from "../controller/AuthController";
 import LoginSchema from "../request/auth-request";
 
-const Authctrl = new AuthController();
+const authCtrl = new AuthController()
 
 const authRouter = Router();
-authRouter.post("/login", bodyValidator(LoginSchema), Authctrl.login);
 
-authRouter.get("/me", AuthCheck(), Authctrl.getLoggedInUserDetail);
+authRouter.post("/login", bodyValidator(LoginSchema), authCtrl.login);
+authRouter.get("/me", AuthCheck(), authCtrl.getLoggedInUserDetail);
 
-//parameterized route
-authRouter.get("/:userId", Authctrl.getUserDetailId);
+// paramterized routes
+authRouter.get("/:userId", authCtrl.getUserDetailById);
 
-export default authRouter;
+
+export default authRouter

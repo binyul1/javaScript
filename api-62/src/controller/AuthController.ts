@@ -4,13 +4,13 @@ import express, {
   type NextFunction,
   Router,
 } from "express";
+import { meta } from "zod/v4/core";
 
 class AuthController {
   login = (req: Request, res: Response, next: NextFunction) => {
     //data
     const credentials = req.body;
     // validate the credentials
-    
 
     res.json({
       data: credentials,
@@ -19,7 +19,7 @@ class AuthController {
     });
   };
 
-  getUserDetailId = (req: Request, res: Response, next: NextFunction) => {
+  getUserDetailById = (req: Request, res: Response, next: NextFunction) => {
     // this function or route is only accessed by loggedin User =>
     const params = req.params;
     const query = req.query;
@@ -41,10 +41,12 @@ class AuthController {
   getLoggedInUserDetail(req: Request, res: Response, next: NextFunction) {
     res.json({
       data: {
-        id: "1234",
+        user: {
+          id: "1234",
+        },
       },
-      name: "John Doe",
-      email: "john.doe@example.com",
+      name: "User Detail",
+      meta: null,
     });
   }
 }

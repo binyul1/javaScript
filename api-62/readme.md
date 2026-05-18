@@ -13,6 +13,7 @@ Setting up an express project with nodejs
     - `> pnpm init`
 
 ## Step 3
+
     - (npm i express@5.2.1 dotenv@16.4.7 cors@2.8.5 @clerk/express@2.1.0 @clerk/backend@3.2.8 @imagekit/nodejs@7.4.0 @sentry/node@10.48.0 @sentry/profiling-node@10.48.0 drizzle-orm@0.39.3 pg@8.13.1 standardwebhooks@1.0.0 stream-chat@8.57.6 zod@3.24.2)
     - Install Dependencies and Dev Dependencies
     - `> pnpm install express`
@@ -134,10 +135,12 @@ Setting up an express project with nodejs
     // ....
 
 ## Step 8
+
     - Run your codebase
     - in terminal from root location run `> pnpm dev`
 
 ## System Architecture
+
     - Logic/Application login
     - Data logic (Database logic)
     - Present
@@ -157,7 +160,7 @@ Setting up an express project with nodejs
                     -AuthRouter.ts
                     -AuthRequest.ts
                     -AuthService.ts
-                
+
 
         -src/
             -controller
@@ -166,3 +169,27 @@ Setting up an express project with nodejs
                 -AuthRequest.ts
             -Router
                 -AuthRouter.ts
+
+````
+
+```js
+  //  ./src/router/router.ts
+  ...
+  router.use('/auth', authRouter)
+
+  // ./src/app.ts
+  ...
+  app.use("/api/v1/",router);
+  app.use('/api/v2/', router)
+  // O - Open-closed principle
+  // open to expansion but closed to modification
+  // payment gateway (esewa)
+    // develop another version which should be used by new version
+
+  // https://api.custom.tld/api/v1/auth/login
+  // https://api.custom.tld/api/v1/auth/register
+  // https://api.custom.tld/api/v1/auth/forget-password
+  // https://api.custom.tld/api/v1/auth/reset-password
+  // https://api.custom.tld/api/v1/auth/logout
+
+````
