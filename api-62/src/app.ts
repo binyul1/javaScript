@@ -2,6 +2,7 @@ import express, { type Application } from "express";
 import router from "./router/router";
 import { ErrorHandler } from "./middleware/ErrorHandling";
 import { type Request, type Response, type NextFunction } from "express";
+import "./config/mongodb"; //database connection
 
 //express application
 const app: Application = express(); //server-side application

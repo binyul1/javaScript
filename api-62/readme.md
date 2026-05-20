@@ -193,3 +193,92 @@ Setting up an express project with nodejs
   // https://api.custom.tld/api/v1/auth/logout
 
 ````
+
+#DB
+
+## Library - ORM or ODM
+
+    - Db physical data-> table or collection
+
+## NoSQL (Non-relational DBMS)
+
+    - ODM
+    - MongoDB > `mongoose`
+
+## SQL (Relational DBMS)
+
+    - ORM
+    - SQL ( pg, mysql, mariadb, oracle, .....) > `sequelize`, `typeorm`, `prisma`
+
+## Setup Server
+
+    - Localize
+    - Onilne
+        - Atlas
+
+```env
+- username - root
+- pw - uLT9IJngaBJE6Uzf
+
+username - user-62
+password - BeC1vrfURNQNNZBB
+```
+
+# Db server config
+
+    - DB connection
+    - DB Database
+    - DB table(relational)
+
+# DB with codebase
+
+    - connection
+    - DB Modelling
+
+# Model
+
+    - Data Structure
+    ``` json
+        {
+
+            },
+            "ip": "42.48.100.32",
+            
+            "macAddress": "47:fa:41:18:ec:eb",
+            "university": "University of Wisconsin--Madison",
+            "bank": {
+            "cardExpire": "03/26",
+            "cardNumber": "9289760655481815",
+            "cardType": "Elo",
+            "currency": "CNY",
+            "iban": "YPUXISOBI7TTHPK2BR3HAIXL"
+            },
+            "company": {
+            "department": "Engineering",
+            "name": "Dooley, Kozey and Cronin",
+            "title": "Sales Manager",
+            "address": {
+            "address": "263 Tenth Street",
+            "city": "San Francisco",
+            "state": "Wisconsin",
+            "stateCode": "WI",
+            "postalCode": "37657",
+            "coordinates": {
+            "lat": 71.814525,
+            "lng": -161.150263
+            },
+            "country": "United States"
+            }
+            },
+            "ein": "977-175",
+            "ssn": "900-590-289",
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36",
+            "crypto": {
+            "coin": "Bitcoin",
+            "wallet": "0xb9fc2fe63b2a6c003f1c324c3bfa53259162181a",
+            "network": "Ethereum (ERC20)"
+            },
+            "role": "admin" // or "moderator", or "user"
+        }
+
+    ```

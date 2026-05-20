@@ -34,7 +34,7 @@ const uploader = (dir = "/") => {
     fileFilter: (req, file, cb) => {
       const ext = file.originalname.split(".").pop() as string;
       const allowed = ["jpg", "jpeg", "png", "gif"];
-      if (allowed.includes(ext)) {
+      if (allowed.includes(ext.toLowerCase())) {
         cb(null, true);
       } else {
         cb(new Error("file format not allowed!"));

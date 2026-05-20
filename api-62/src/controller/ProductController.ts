@@ -9,7 +9,7 @@ class ProductController {
 
     // const file = req.file;    // for single file upload
     const files = req.files as {
-      thumbnail: Array<Express.Multer.File>;
+      thumbnail: Array<Express.Multer.File>,
       images: Array<Express.Multer.File>;
     };
 
