@@ -4,9 +4,42 @@ import express, {
   type NextFunction,
   Router,
 } from "express";
-import { meta } from "zod/v4/core";
+import bcrypt from "bcryptjs";
+import UserModel from "../model/UserModel";
 
 class AuthController {
+  async register(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = req.body;
+
+      if (!data.role) {
+        data.role = "user";
+      }
+      //password -> plaintext
+
+      data.password = bcrypt.hashSync(data.password, 12);
+
+      if (req.file) {
+        data.image = {
+          originalName: req.file.originalname,
+          filename: req.file.filename,
+          size: req.file.size,
+          destination: req.file.destination,
+        };
+      }
+      // db store
+      const user = new UserModel(data);
+      await user.save();
+      res.json({
+        data: user,
+        message: "User Account registered successfully",
+        meta: null
+      });
+    } catch (exceptation) {
+      next(exceptation);
+    }
+  };
+
   login = (req: Request, res: Response, next: NextFunction) => {
     //data
     const credentials = req.body;
