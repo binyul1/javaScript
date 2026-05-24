@@ -9,15 +9,14 @@ import UserModel from "../model/UserModel";
 import AuthService from "../services/AuthService";
 import jwt from "jsonwebtoken";
 import { Secrets } from "../config/app-env";
+import type { AuthRequest } from "../types/Request";
+import next from "next/dist/server/next";
 
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
       const data = AuthService.mapUserDataForRegister(req);
-      console.log(data);
-      // db store
-      const user = new UserModel(data);
-      await user.save();
+      const user = await AuthService.storeUser(data);
       res.json({
         data: user,
         message: "User Account registered successfully",
@@ -29,68 +28,80 @@ class AuthController {
   }
 
   login = async (req: Request, res: Response, next: NextFunction) => {
-    //data
-    const credentials = req.body;
-    // validate the credentials
-    const userDetail = await UserModel.findOne({
-      $or: [
-        { username: credentials.username },
-        { email: credentials.username },
-      ],
-    });
+    try {
+      // data
+      const credentials = req.body;
+      // .findById(id)
+      // .find(filter)
+      // .findOne(filter)
+      const userDetail = await UserModel.findOne({
+        $or: [
+          { username: credentials.username },
+          { email: credentials.username },
+        ],
+      });
 
-    if (!userDetail) {
-      throw { code: 422, message: "User not found" };
-    }
+      if (!userDetail) {
+        throw { code: 422, message: "User not found." };
+      }
 
-    if (!bcrypt.compareSync(credentials.password, userDetail.password)) {
-      throw { code: 422, message: "Credentials doesnot match" };
-    }
+      // password verify
+      if (!bcrypt.compareSync(credentials.password, userDetail.password)) {
+        throw { code: 422, message: "Credentials does not match." };
+      }
 
-    const token = jwt.sign(
-      { sub: userDetail._id, type: "Bearer" },
-      Secrets.jwtSecret as string,
-      {
-        expiresIn: credentials.expiresInMinutes || 180,
-      },
-    );
-
-    res.json({
-      data: {
-        accessToken: token,
-      },
-      message: "Login Success",
-      meta: null,
-    });
-  };
-
-  getUserDetailById = (req: Request, res: Response, next: NextFunction) => {
-    // this function or route is only accessed by loggedin User =>
-    const params = req.params;
-    const query = req.query;
-
-    // {key:value} => {string: value}
-    //TODO: db query for fetching the user detail
-    const data = {
-      id: params.userId,
-      query: query,
-    };
-
-    res.json({
-      data: data,
-      message: "user detail",
-      meta: null,
-    });
-  };
-
-  getLoggedInUserDetail(req: Request, res: Response, next: NextFunction) {
-    res.json({
-      data: {
-        user: {
-          id: "1234",
+      const expiresInMinutes = Number(credentials.expiresInMinutes) || 180;
+      const token = jwt.sign(
+        { sub: userDetail._id, typ: "Bearer" },
+        Secrets.jwtSecret as string,
+        {
+          expiresIn: `${expiresInMinutes}m`,
         },
-      },
-      name: "User Detail",
+      );
+
+      res.json({
+        data: {
+          accessToken: token,
+        },
+        message: "Login success",
+        meta: null,
+      });
+    } catch (exception) {
+      next(exception);
+    }
+  };
+
+  getUserDetailById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    // this function or route is only accessed by loggedin User =>
+    try {
+      const params = req.params;
+      const userDetail = await UserModel.findById(params.userId, {
+        password: 0,
+        __v: 0,
+        createdAt: 0,
+        updatedAt: 0,
+      });
+      if (!userDetail) {
+        throw { code: 404, message: "User not found" };
+      }
+      res.json({
+        data: userDetail,
+        message: "User Detail",
+        meta: null,
+      });
+    } catch (exceptation) {
+      next(exceptation);
+    }
+  };
+
+  getLoggedInUserDetail(req: AuthRequest, res: Response, next: NextFunction) {
+    res.json({
+      data: req.loggedInUser,
+      message: "User Detail",
       meta: null,
     });
   }
