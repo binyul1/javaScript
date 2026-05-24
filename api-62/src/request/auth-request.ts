@@ -21,3 +21,4 @@ export const UserRegisterScema = z.object({
   message:"Password and confirm password doesnot match",
   path:['confirmPassword']
 })
+

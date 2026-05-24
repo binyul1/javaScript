@@ -6,47 +6,59 @@ import express, {
 } from "express";
 import bcrypt from "bcryptjs";
 import UserModel from "../model/UserModel";
+import AuthService from "../services/AuthService";
+import jwt from "jsonwebtoken";
+import { Secrets } from "../config/app-env";
 
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      const data = req.body;
-
-      if (!data.role) {
-        data.role = "user";
-      }
-      //password -> plaintext
-
-      data.password = bcrypt.hashSync(data.password, 12);
-
-      if (req.file) {
-        data.image = {
-          originalName: req.file.originalname,
-          filename: req.file.filename,
-          size: req.file.size,
-          destination: req.file.destination,
-        };
-      }
+      const data = AuthService.mapUserDataForRegister(req);
+      console.log(data);
       // db store
       const user = new UserModel(data);
       await user.save();
       res.json({
         data: user,
         message: "User Account registered successfully",
-        meta: null
+        meta: null,
       });
     } catch (exceptation) {
       next(exceptation);
     }
-  };
+  }
 
-  login = (req: Request, res: Response, next: NextFunction) => {
+  login = async (req: Request, res: Response, next: NextFunction) => {
     //data
     const credentials = req.body;
     // validate the credentials
+    const userDetail = await UserModel.findOne({
+      $or: [
+        { username: credentials.username },
+        { email: credentials.username },
+      ],
+    });
+
+    if (!userDetail) {
+      throw { code: 422, message: "User not found" };
+    }
+
+    if (!bcrypt.compareSync(credentials.password, userDetail.password)) {
+      throw { code: 422, message: "Credentials doesnot match" };
+    }
+
+    const token = jwt.sign(
+      { sub: userDetail._id, type: "Bearer" },
+      Secrets.jwtSecret as string,
+      {
+        expiresIn: credentials.expiresInMinutes || 180,
+      },
+    );
 
     res.json({
-      data: credentials,
+      data: {
+        accessToken: token,
+      },
       message: "Login Success",
       meta: null,
     });
