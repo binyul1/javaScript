@@ -2,6 +2,7 @@ import { Router } from "express";
 import { healthCheck } from "../controller/TestController";
 import authRouter from "./auth-router";
 import productRouter from "./product-router";
+import userRouter from "./user-router";
 
 //router
 const router: Router = Router();
@@ -13,6 +14,7 @@ const router: Router = Router();
 
 router.get("/", healthCheck);
 router.use("/auth", authRouter);
-router.use("/product", productRouter);
+router.use("/products", productRouter);
+router.use("/user", userRouter);
 
 export default router;

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import ProductController from "../controller/ProductController";
+import getAllProducts from "../controller/ProductController";
 import uploader from "../middleware/Uploader";
+import AuthCheck from "../middleware/Auth";
 // import { bodyValidator } from "../middleware/Validator";
 
 const productRouter = Router()
@@ -12,15 +14,17 @@ const productCtrl = new ProductController()
 // .fields([{name: FieldName, maxCount: number}])
 
 productRouter.post(
-  "/create",
+  "/create",AuthCheck(["admin"]),
   // uploader().single("thumbnail"),
   // uploader().array("images"),
   uploader("/products").fields([
     {name: "thumbnail", maxCount: 1},
     {name: "images", maxCount: 10}
   ]),
+  //validation
   productCtrl.createProduct,
 );
 
+productRouter.get("/",productCtrl.getAllProducts)
 
 export default productRouter

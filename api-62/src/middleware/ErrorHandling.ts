@@ -1,5 +1,6 @@
 import { type Request, type Response, type NextFunction } from "express";
 import mongoose from "mongoose";
+import fs from "fs";
 
 export const ErrorHandler = (error: any, req: Request, res: Response, next: NextFunction) => {
     let code = error.code || 500;
@@ -20,6 +21,11 @@ export const ErrorHandler = (error: any, req: Request, res: Response, next: Next
             message = "validation Failed"
         }
 
+    }
+
+    // delete file if error
+    if(req.file && fs.existsSync(req.file.path)){
+        fs.unlinkSync(req.file.path);
     }
     
     res.status(code).json({

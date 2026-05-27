@@ -39,6 +39,10 @@ class ProductController {
       data: data,
     });
   }
+
+  async getAllProducts(req: Request, res: Response, next: NextFunction) {
+    res.json()
+  }
 }
 
 export default ProductController;

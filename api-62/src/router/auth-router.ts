@@ -10,7 +10,7 @@ const authCtrl = new AuthController()
 const authRouter = Router();
 
 authRouter.post("/login", bodyValidator(LoginSchema), authCtrl.login);
-authRouter.post("/register", bodyValidator(UserRegisterSchema), uploader("/users").single("image"), authCtrl.register);
+authRouter.post("/register", uploader("/users").single("image"), bodyValidator(UserRegisterSchema),  authCtrl.register);
 authRouter.get("/me", AuthCheck(["admin"]), authCtrl.getLoggedInUserDetail);
 
 

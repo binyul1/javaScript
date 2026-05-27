@@ -25,7 +25,7 @@ class AuthService {
   }
   static async storeUser(data: IUserRegisterDetail) {
     const user = new UserModel(data);
-    await user.save(); // save() -=> insert, existing data .save() => update
+    return await user.save(); // save() -=> insert, existing data .save() => update
   }
 }
 

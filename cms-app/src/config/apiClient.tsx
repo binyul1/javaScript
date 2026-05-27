@@ -24,7 +24,8 @@ axiosInstance.interceptors.request.use((config) => {
 // API Server ----> Internet ----> Axios ----> Interceptor(response)[optional] ----> Component(UI)
 axiosInstance.interceptors.response.use(
   (response) => {
-    return response.data
+    console.log(response);
+    return response.data.data;
   }, 
   (exception) => {
     // TODO: refresh token implementation

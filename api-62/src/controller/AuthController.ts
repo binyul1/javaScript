@@ -8,7 +8,7 @@ import bcrypt from "bcryptjs";
 import UserModel from "../model/UserModel";
 import AuthService from "../services/AuthService";
 import jwt from "jsonwebtoken";
-import { Secrets } from "../config/app-env";
+import { AppConfig, Secrets } from "../config/app-env";
 import type { AuthRequest } from "../types/Request";
 import next from "next/dist/server/next";
 
@@ -99,10 +99,14 @@ class AuthController {
   };
 
   getLoggedInUserDetail(req: AuthRequest, res: Response, next: NextFunction) {
+    const loggedInUser = req.loggedInUser;
     res.json({
-      data: req.loggedInUser,
-      message: "User Detail",
-      meta: null,
+      data: {
+        ...req.loggedInUser,
+        image: `${AppConfig.assetsUrl}uploads/users/${loggedInUser?.image?.fileName}`,
+      },
+        message: "User Detail",
+        meta: null,
     });
   }
 }

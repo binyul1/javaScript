@@ -61,8 +61,10 @@ export default function AdminLayout() {
                 <li className="flex items-center justify-content gap-3">
                   <img
                     src={loggedInUser?.image}
+                    // src={import.meta.env.VITE_APP_ASSETS_URL+"/uploads/users"+loggedInUser?.image?.fileName}
                     alt="profile"
                     className="size-10 rounded-full"
+                    crossOrigin="anonymous"
                   />
                   <p>
                     {loggedInUser?.firstName + " " + loggedInUser?.lastName}

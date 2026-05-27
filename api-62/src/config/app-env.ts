@@ -10,3 +10,6 @@ export const MongodbConfig = {
 export const Secrets = {
     jwtSecret: process.env.JWT_SECRET
 }
+export const AppConfig = {
+    assetsUrl: process.env.ASSETS_URL   
+}
