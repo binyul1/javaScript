@@ -30,7 +30,7 @@ exports.ProductCreateDTO = zod_1.z.object({
     warrantyInformation: zod_1.z.string().optional(),
     shippingInformation: zod_1.z.string().optional(),
     availabilityStatus: zod_1.z
-        .enum(["in stock", "out of stock", "preorder", "available"])
+        .enum(["not available", "low stock", "available"])
         .optional()
         .default("available"),
     returnPolicy: zod_1.z.string().optional(),

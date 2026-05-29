@@ -40,7 +40,7 @@ app.use(express_1.default.json({
 app.use(express_1.default.urlencoded({
     limit: "3mb",
 }));
-app.use('/assets', express_1.default.static(path_1.default.join(__dirname, "../public")));
+app.use('/assets', express_1.default.static(path_1.default.join(__dirname, "../public/")));
 // loading the router
 // app.use(cors(),router);// can write in this way also
 app.use(router_1.default);

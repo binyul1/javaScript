@@ -24,6 +24,10 @@ productRouter.post("/",AuthCheck(["admin"]),
     bodyValidator(ProductCreateDTO), productCtrl.createProduct,
 );
 
-productRouter.get("/", productCtrl.getAllProducts);
+// Localhost:9005/products
+productRouter.get("/", AuthCheck(["admin"]), productCtrl.getAllProductsByUser);
+
+//localhost:9005/products/home
+productRouter.get("/home", productCtrl.getAllProducts);
 
 export default productRouter

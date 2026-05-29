@@ -62,7 +62,7 @@ const ProductSchema = new mongoose.Schema({
   shippingInformation: String,
   availabilityStatus: {
     type: String,
-    enum: ["in stock", "out of stock", "preorder", "available"],
+    enum: ["not available", "low stock", "available"],
     default: "available",
   },
   returnPolicy: String,

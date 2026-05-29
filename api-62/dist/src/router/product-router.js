@@ -15,9 +15,17 @@ const productCtrl = new ProductController_1.default();
 // .single(nameOfFileUploadingField) => if content-type if multipart/form-data and a field has a single file upload
 // .array(nameOfFileUploadingField, maxCount) 
 // .fields([{name: FieldName, maxCount: number}])
+productRouter.get("/categories", (0, Auth_1.default)(["admin"]), productCtrl.getAllCategories);
 productRouter.post("/", (0, Auth_1.default)(["admin"]), 
 // uploader().single("thumbnail"),
 // uploader().array("images"),
-(0, Uploader_1.default)("/products").fields([{ name: "thumbnail", maxCount: 1 }, { name: "images", maxCount: 10 }]), (0, Validator_1.bodyValidator)(product_request_1.ProductCreateDTO), productCtrl.createProduct);
+(0, Uploader_1.default)("/products").fields([
+    { name: "thumbnail", maxCount: 1 },
+    { name: "images", maxCount: 10 }
+]), (0, Validator_1.bodyValidator)(product_request_1.ProductCreateDTO), productCtrl.createProduct);
+// Localhost:9005/products
+productRouter.get("/", (0, Auth_1.default)(["admin"]), productCtrl.getAllProductsByUser);
+//localhost:9005/products/home
+productRouter.get("/home", productCtrl.getAllProducts);
 exports.default = productRouter;
 //# sourceMappingURL=product-router.js.map

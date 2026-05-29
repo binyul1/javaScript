@@ -51,7 +51,7 @@ app.use(
   }),
 );
 
-app.use('/assets',express.static(path.join(__dirname,"../public")))
+app.use('/assets',express.static(path.join(__dirname,"../public/")))
 
 // loading the router
 // app.use(cors(),router);// can write in this way also

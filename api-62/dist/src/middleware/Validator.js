@@ -15,7 +15,10 @@ const bodyValidator = (schema) => {
             }
             else {
                 // validate and transform incoming values into real numbers/strings
-                req.body = await schema.parseAsync(data);
+                const parsedData = await schema.parseAsync(data);
+                // console.log(data)
+                // console.log(parsedData)
+                req.body = parsedData;
                 next();
             }
         }

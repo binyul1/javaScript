@@ -40,7 +40,7 @@ export const ProductCreateDTO = z.object({
   shippingInformation: z.string().optional(),
 
   availabilityStatus: z
-    .enum(["in stock", "out of stock", "preorder", "available"])
+    .enum(["not available", "low stock", "available"])
     .optional()
     .default("available"),
 

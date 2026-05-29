@@ -5,14 +5,15 @@ import path from "path";
 const uploader = (dir = "/") => {
   const myStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-      const filePath = path.join(__dirname, "../../public/uploads", dir);
+      // const filePath = path.join(__dirname, "../../public/uploads", dir);
+      const filePath = "./public/uploads" + dir;
       if (!fs.existsSync(filePath)) {
         fs.mkdirSync(filePath, { recursive: true });
       }
       cb(null, filePath);
     },
     filename: (req, file, cb) => {
-      const filename = Date.now() + "_" + file.originalname;
+      const filename = Date.now() + "-" + file.originalname;
       cb(null, filename);
     },
   });

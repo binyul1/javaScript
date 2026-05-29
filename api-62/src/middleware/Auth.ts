@@ -26,23 +26,17 @@ const AuthCheck = (role: null | Array<string> = null) => {
         if (!userDetail) {
           next({ code: 401, message: "User not found" });
         } else {
+          // user exists
           req.loggedInUser = {
-            image: userDetail.image
-              ? {
-                  originalName: userDetail.image.originalName ?? null,
-                  fileName: userDetail.image.fileName ?? null,
-                  destination: userDetail.image.destination ?? null,
-                  size: userDetail.image.size ?? null,
-                }
-              : null,
+            image: userDetail.image as unknown as null,
             _id: userDetail._id as unknown as string,
-            firstName: userDetail.firstName,
-            email: userDetail.email,
-            lastName: userDetail.lastName,
-            username: userDetail.username,
+            firstName:userDetail.firstName,
             maidenName: userDetail.maidenName,
+            lastName:userDetail.lastName,
+            email: userDetail.email,
+            username: userDetail.username,
             phone: userDetail.phone,
-            role: userDetail.role,
+            role: userDetail.role
           };
           if (
             !role ||
