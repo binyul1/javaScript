@@ -8,9 +8,13 @@ export const bodyValidator = (schema: any) => {
 
       if (!data) {
         next({ code: 422, message: "Data not set." });
+        return;
       } else {
-        // validate
-        await schema.parseAsync(data);
+        // validate and transform incoming values into real numbers/strings
+        const parsedData = await schema.parseAsync(data);
+        // console.log(data)
+        // console.log(parsedData)
+        req.body = parsedData;
         next();
       }
     } catch (exception) {

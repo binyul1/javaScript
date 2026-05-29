@@ -238,7 +238,7 @@ password - BeC1vrfURNQNNZBB
 # Model
 
     - Data Structure
-    ``` json
+``` json
         {
 
             },
@@ -279,6 +279,35 @@ password - BeC1vrfURNQNNZBB
             "network": "Ethereum (ERC20)"
             },
             "role": "admin" // or "moderator", or "user"
-        }
+```
+```js
+    {
+        "title": "Essence Mascara Lash Princess",
+        "description": "The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.",
+        "category": "beauty",
+        "price": 9.99,
+        "discountPercentage": 10.48,
+        "stock": 99,
+        "tags": [
+            "beauty",
+            "mascara"
+        ],
+        "brand": "Essence",
+        "weight": 4,
+        "dimensions": {
+            "width": 15.14,
+            "height": 13.08,
+            "depth": 22.99
+        },
+        "warrantyInformation": "1 week warranty",
+        "shippingInformation": "Ships in 3-5 business days",
+        "availabilityStatus": "In Stock",
+        "returnPolicy": "No return policy",
+        "minimumOrderQuantity": 48,
+        "images": [
+            "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
+        ],
+        "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp"
+    }
 
-    ```
+```

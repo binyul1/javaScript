@@ -1,0 +1,107 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const ProductSchema = new mongoose_1.default.Schema({
+    title: {
+        type: String,
+        required: true,
+        min: 2,
+        max: 200,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    description: {
+        type: String,
+        required: true,
+        min: 10,
+        max: 500,
+    },
+    category: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "Category",
+        required: true,
+    },
+    price: {
+        type: Number,
+        required: true,
+        min: 100,
+    },
+    discountPercentage: {
+        type: Number,
+        min: 0,
+        max: 100,
+    },
+    afterDiscount: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Number,
+    },
+    tags: [
+        {
+            type: String,
+            default: null,
+            required: false,
+        },
+    ],
+    brand: {
+        type: String,
+    },
+    weight: Number,
+    dimensions: {
+        sizes: [String],
+        width: Number,
+        height: Number,
+        depth: Number,
+    },
+    warrantyInformation: String,
+    shippingInformation: String,
+    availabilityStatus: {
+        type: String,
+        enum: ["in stock", "out of stock", "preorder", "available"],
+        default: "available",
+    },
+    returnPolicy: String,
+    minimumOrderQuantity: {
+        type: Number,
+        default: 1,
+    },
+    thumbnail: {
+        originalName: String,
+        fileName: String,
+        size: Number,
+        destination: String,
+    },
+    images: [
+        {
+            originalName: String,
+            fileName: String,
+            size: Number,
+            destination: String,
+        },
+    ],
+    createdBy: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
+        default: null,
+    },
+    updatedBy: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
+        default: null,
+    }
+}, {
+    timestamps: true,
+    autoCreate: true,
+    autoIndex: true,
+});
+const ProductModel = mongoose_1.default.model("Product", ProductSchema);
+exports.default = ProductModel;
+//# sourceMappingURL=ProductModel.js.map
