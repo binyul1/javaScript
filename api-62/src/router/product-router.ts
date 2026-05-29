@@ -7,7 +7,7 @@ import { bodyValidator } from "../middleware/Validator";
 import { ProductCreateDTO } from "../request/product-request";
 
 const productRouter = Router()
-const productCtrl = new ProductController()
+const productCtrl = new ProductController();
 
 // .none() => if content-type is multipart/form-data but no file upload
 // .single(nameOfFileUploadingField) => if content-type if multipart/form-data and a field has a single file upload
