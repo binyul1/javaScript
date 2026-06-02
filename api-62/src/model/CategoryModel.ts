@@ -15,7 +15,7 @@ const CategorySchema = new mongoose.Schema({
     },
     image:{
         originalName: String,
-        fileName: String,
+        filename: String,
         size: Number,
         destination: String,
     },

@@ -18,7 +18,6 @@ export const getAllProducts = createAsyncThunk("product/getAllProduct",
               skip: payload.skip,
             }
     });
-    console.log({response})
     return response as unknown as { products: Array<IProductDetail>, skip: number, limit: number };
 }
 )

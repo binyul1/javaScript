@@ -72,14 +72,14 @@ const ProductSchema = new mongoose.Schema({
   },
   thumbnail: {
     originalName: String,
-    fileName: String,
+    filename: String,
     size: Number,
     destination: String,
   },
   images: [
     {
       originalName: String,
-      fileName: String,
+      filename: String,
       size: Number,
       destination: String,
     },

@@ -15,10 +15,10 @@ class AuthService {
         data.password = bcryptjs_1.default.hashSync(data.password, 12);
         if (req.file) {
             data.image = {
-                originalName: req.file.originalname ?? null,
-                fileName: req.file.filename ?? null,
-                size: req.file.size ?? null,
-                destination: req.file.destination ?? null,
+                originalName: req.file.originalname,
+                filename: req.file.filename,
+                size: req.file.size,
+                destination: req.file.destination,
             };
         }
         return data;

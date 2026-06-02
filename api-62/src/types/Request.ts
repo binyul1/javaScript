@@ -4,7 +4,7 @@ import { Request } from "express";
 export interface IUserDetail{
     image?: {
         originalName: string | null;
-        fileName: string | null;
+        filename: string | null;
         destination: string | null;
         size: number | null;
     } | null;

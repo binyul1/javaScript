@@ -10,9 +10,9 @@ const AuthProvider = ({ children }: Readonly<{children: ReactNode}>) => {
 
     const login = async (credentials: ICredentials) => {
         try {
-            const response = await axiosInstance.post("/auth/login", credentials) as ILoginResponse
-            Cookies.set("_at_62", response.accessToken);
-            Cookies.set("_rt_62", response.refreshToken);
+            const response = await axiosInstance.post("/auth/login", credentials) as {data: ILoginResponse}
+            Cookies.set("_at_62", response.data.accessToken);
+            Cookies.set("_rt_62", response.data.refreshToken);
 
             const userDetail = await getLoggedInUser();
             return userDetail;
@@ -23,10 +23,9 @@ const AuthProvider = ({ children }: Readonly<{children: ReactNode}>) => {
 
     const getLoggedInUser = async () => {
         try {
-            const response = await axiosInstance.get("/auth/me") as IUserDetail
-            setLoggedInUser(response);
-            console.log(response)
-            return response;
+            const response = await axiosInstance.get("/auth/me") as {data: IUserDetail}
+            setLoggedInUser(response.data);
+            return response.data;
     
         } catch (exception) {
             console.log(exception)

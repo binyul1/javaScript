@@ -9,15 +9,28 @@ import { FaThList } from "react-icons/fa";
 import SingleProductGridItem from "../../components/products/SingleProductGridItem";
 import SingleProductSkeleton from "../../components/products/SingleProductSkeleton";
 import axiosInstance from "../../config/apiClient";
-import type { IProductDetail } from "./ProductDetail";
+import {type IProductDetail } from "./ProductDetail";
 
 
 
 export interface IProductListResponse{
-  limit: number, 
+  data: Array<IProductDetail>, 
   products: Array<IProductDetail>,
   skip:number,
   total: number,
+}
+
+export interface IProductListResponseAPI{
+  data: Array<IProductDetail>, 
+  message: string,
+  meta:{
+    pagination: {
+      current: number,
+      limit: number,
+      totalCount: number,
+      noOfPages: number,
+    }
+  }
 }
 
 export default function ListAllProducts() {
@@ -25,8 +38,6 @@ export default function ListAllProducts() {
 
   const [loading, setloading] = useState<boolean>(true);
   const [products, setProducts] = useState<Array<IProductDetail>>();
-
-
 
   const getAllProducts = async() => {
     //api caller
@@ -37,10 +48,13 @@ export default function ListAllProducts() {
           skip:0,
           select:"id,title,description,category,price,discountPercentage,rating,brand,thumbnail" 
         }
-      }) as IProductListResponse
-      setloading(false)
-      setProducts(response.products)
+      }) as IProductListResponseAPI
       console.log(response)
+
+      setloading(false)
+      // setProducts(response.products)
+      setProducts(response.data)
+
     } catch (exceptation) {
       console.log(exceptation)
     }

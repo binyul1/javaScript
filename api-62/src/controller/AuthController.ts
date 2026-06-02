@@ -103,7 +103,7 @@ class AuthController {
     res.json({
       data: {
         ...req.loggedInUser,
-        image: `${AppConfig.assetsUrl}uploads/users/${loggedInUser?.image?.fileName}`,
+        image: `${AppConfig.assetsUrl}uploads/users/${loggedInUser?.image?.filename}`,
       },
         message: "User Detail",
         meta: null,

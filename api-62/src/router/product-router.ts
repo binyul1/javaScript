@@ -15,6 +15,10 @@ const productCtrl = new ProductController();
 // .fields([{name: FieldName, maxCount: number}])
 productRouter.get("/categories", AuthCheck(["admin"]), productCtrl.getAllCategories);
 
+//localhost:9005/products/home
+productRouter.get("/home", productCtrl.getAllProducts);
+productRouter.get("/:productSlug/home", productCtrl.homeGetProductDetailBySlug);
+
 productRouter.post("/",AuthCheck(["admin"]),
   // uploader().single("thumbnail"),
   // uploader().array("images"),
@@ -26,8 +30,11 @@ productRouter.post("/",AuthCheck(["admin"]),
 
 // Localhost:9005/products
 productRouter.get("/", AuthCheck(["admin"]), productCtrl.getAllProductsByUser);
+productRouter.get("/:productSlug", AuthCheck(["admin"]), productCtrl.getProductDetailBySlug);
+productRouter.put("/:productSlug", AuthCheck(["admin"]), uploader("/products").fields([
+  {name: "thumbnail", maxCount: 1},
+  {name: "images", maxCount: 10}]), bodyValidator(ProductCreateDTO), productCtrl.updateProduct);
+productRouter.delete("/:productId", AuthCheck(["admin"]), productCtrl.deleteProductById);
 
-//localhost:9005/products/home
-productRouter.get("/home", productCtrl.getAllProducts);
 
 export default productRouter

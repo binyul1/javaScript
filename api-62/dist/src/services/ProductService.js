@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const slugify_1 = __importDefault(require("slugify"));
 const ProductModel_1 = __importDefault(require("../model/ProductModel"));
 const helpers_1 = require("../utilities/helpers");
+const app_env_1 = require("../config/app-env");
 class ProductService {
     static async generateUniqueSlug(title) {
         //slug
@@ -57,7 +58,24 @@ class ProductService {
                 .limit(config.limit); //pagination limit
             const totalProducts = await ProductModel_1.default.countDocuments(filter);
             return {
-                rows: productList,
+                rows: productList.map((prod) => {
+                    return {
+                        thumbnail: `${app_env_1.AppConfig.assetsUrl}uploads/products/${prod.thumbnail?.filename}`,
+                        _id: prod._id,
+                        title: prod.title,
+                        slug: prod.slug,
+                        description: prod.description,
+                        category: prod.category,
+                        price: prod.price,
+                        discountPercentage: prod.discountPercentage,
+                        afterDiscount: prod.afterDiscount,
+                        stock: prod.stock,
+                        tags: prod.tags,
+                        brand: prod.brand,
+                        availabilityStatus: prod.availabilityStatus,
+                        minimumOrderQuantity: prod.minimumOrderQuantity,
+                    };
+                }),
                 pagination: {
                     current: +config.page,
                     limit: +config.limit,

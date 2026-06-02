@@ -29,6 +29,7 @@ export interface IProductDetail {
   category: string;
   price: number;
   discountPercentage: number;
+  afterDiscount: number;
   rating: number;
   stock: number;
   tags: Array<string>;

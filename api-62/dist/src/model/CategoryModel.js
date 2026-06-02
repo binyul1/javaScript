@@ -19,7 +19,7 @@ const CategorySchema = new mongoose_1.default.Schema({
     },
     image: {
         originalName: String,
-        fileName: String,
+        filename: String,
         size: Number,
         destination: String,
     },
