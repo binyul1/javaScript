@@ -15,9 +15,16 @@ import next from "next/dist/server/next";
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
+
+      console.log(req.file, req.body);
       const data = AuthService.mapUserDataForRegister(req);
       const user = await AuthService.storeUser(data);
-      res.json({
+
+      //notify user account regestered
+        // provider sdk integrate
+        
+        res.json({
+        
         data: user,
         message: "User Account registered successfully",
         meta: null,

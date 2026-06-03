@@ -13,7 +13,8 @@ const productCtrl = new ProductController();
 // .single(nameOfFileUploadingField) => if content-type if multipart/form-data and a field has a single file upload
 // .array(nameOfFileUploadingField, maxCount) 
 // .fields([{name: FieldName, maxCount: number}])
-productRouter.get("/categories", AuthCheck(["admin"]), productCtrl.getAllCategories);
+productRouter.get("/categories",  productCtrl.getAllCategories);
+productRouter.get("/categories/:slug",  productCtrl.getAllProductByCatSlug);
 
 //localhost:9005/products/home
 productRouter.get("/home", productCtrl.getAllProducts);

@@ -311,3 +311,12 @@ password - BeC1vrfURNQNNZBB
     }
 
 ```
+
+# SMTP SERVER
+    - `gmail`, `SES`, ``, ``
+    - host, 
+    - port
+    - auth
+        - username
+        - password
+    - from address
