@@ -10,21 +10,29 @@ import AuthService from "../services/AuthService";
 import jwt from "jsonwebtoken";
 import { AppConfig, Secrets } from "../config/app-env";
 import type { AuthRequest } from "../types/Request";
-import next from "next/dist/server/next";
+import EmailService from "../services/EmailService";
 
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-
       console.log(req.file, req.body);
       const data = AuthService.mapUserDataForRegister(req);
       const user = await AuthService.storeUser(data);
 
       //notify user account regestered
-        // provider sdk integrate
-        
-        res.json({
-        
+      // provider sdk integrate
+      const emailSvc = new EmailService();
+      await emailSvc.sendEmail({
+        to: user.email,
+        subject: "Your account registered successfully",
+        body: `<Strong>Hello ${user.firstName},</Strong>
+          <p>Your account has been registered. Please login to continue.</p>
+          <div>
+            <strong>Admin System</strong>
+          </div>`,
+      });
+
+      res.json({
         data: user,
         message: "User Account registered successfully",
         meta: null,
@@ -112,8 +120,8 @@ class AuthController {
         ...req.loggedInUser,
         image: `${AppConfig.assetsUrl}uploads/users/${loggedInUser?.image?.filename}`,
       },
-        message: "User Detail",
-        meta: null,
+      message: "User Detail",
+      meta: null,
     });
   }
 }
