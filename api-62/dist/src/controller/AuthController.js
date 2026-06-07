@@ -8,6 +8,7 @@ const UserModel_1 = __importDefault(require("../model/UserModel"));
 const AuthService_1 = __importDefault(require("../services/AuthService"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const app_env_1 = require("../config/app-env");
+const EmailService_1 = __importDefault(require("../services/EmailService"));
 class AuthController {
     constructor() {
         this.login = async (req, res, next) => {
@@ -74,6 +75,18 @@ class AuthController {
         try {
             const data = AuthService_1.default.mapUserDataForRegister(req);
             const user = await AuthService_1.default.storeUser(data);
+            //notify user account regestered
+            // provider sdk integrate
+            const emailSvc = new EmailService_1.default();
+            await emailSvc.sendEmail({
+                to: user.email,
+                subject: "Your account registered successfully",
+                body: `<Strong>Hello ${user.firstName},</Strong>
+          <p>Your account has been registered. Please login to continue.</p>
+          <div>
+            <strong>Admin System</strong>
+          </div>`,
+            });
             res.json({
                 data: user,
                 message: "User Account registered successfully",

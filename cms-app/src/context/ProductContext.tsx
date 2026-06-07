@@ -7,9 +7,9 @@ export interface IProduceContext {
     getProductDetail(productId: string) : Promise<void | IProductDetail>;
 }
 
-const ProductContext = createContext(
+const ProductContext = createContext<IProduceContext>(
     {
-        detail:undefined,
+        detail:undefined ,
         async getProductDetail(){}
     })
 

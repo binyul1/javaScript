@@ -8,9 +8,7 @@ export default function ProductProvider({ children}: Readonly<{ children: ReactN
 
   const getProductDetail = async (productId: string) => {
     try {
-      const response = (await axiosInstance.get(
-        "/products/" + productId,
-      )) as IProductDetail;
+      const response = (await axiosInstance.get("/products/" + productId)) as IProductDetail;
       setProductDetail(response);
     } catch (exceptation) {
       console.log(exceptation);

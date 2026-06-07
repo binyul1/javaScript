@@ -10,7 +10,6 @@ export default function AdminLayout() {
   // const {loggedInUser} = useContext(AuthContext);
   const { loggedInUser } = useAuth();
 
-  console.log(loggedInUser);
   return (
     <>
       <section className="w-full h-screen flex bg-stone-50">

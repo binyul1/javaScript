@@ -8,6 +8,7 @@ import ListAllProducts from "../../pages/products/ListAllProducts";
 import ProductDetail from "../../pages/products/ProductDetail";
 import ProductProvider from "../provider/ProductProvider";
 import ListOrder from "../../pages/order/ListOrder";
+import UserList from "../../pages/users/UserList";
 
 
 
@@ -41,6 +42,7 @@ export const AdminRouter = [
       },
       { path: "order", element:<ListOrder />},
       { path: "order/create", element:<CreateOrder />},
+      { path: "users", element: <UserList /> },
       { path: "*", element: <NotFound url="/admin" /> },
     ],
   },

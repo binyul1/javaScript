@@ -1,7 +1,28 @@
 import http from "http";
 import app from "./src/app";
+import { Server } from "socket.io";
 
 const server = http.createServer(app);
+
+const io = new Server(server,{
+  cors: {
+    origin: "*",
+  }
+});
+
+// event based
+  // fire/trigger/call
+  // listen/ listner
+  // io.emit("")
+
+  io.on("connection",(socket) => {
+    console.log("Connected Client:", socket.id);
+    socket.on("Recieved",(data) => {
+      console.log("Data from client: ", data);
+      socket.broadcast.emit("HIRecieved", {data: data});
+    })
+  })
+
 
 //TODO: To put these configs in .env
 //listen

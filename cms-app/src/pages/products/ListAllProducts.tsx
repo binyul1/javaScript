@@ -59,9 +59,11 @@ export default function ListAllProducts() {
       console.log(exceptation)
     }
   }
-
+  console.log(products)
   useEffect(()=>{
-    getAllProducts()
+    return() => {
+      getAllProducts()
+    }
   },[])
 
   return (

@@ -4,7 +4,7 @@ import UserModel from "../model/UserModel";
 class UserController {
     async getAllUserList(req: Request, res: Response, next: NextFunction) {
         try{
-            const userList = await UserModel.find({},{password:0, __v:0});
+            const userList = await UserModel.find({},{password: 0, __v: 0, "image.destination": 0, "image.originalName": 0, "image.size": 0 });
             res.json({
                 data:userList,
                 message:"User list retrieved",

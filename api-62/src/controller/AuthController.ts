@@ -15,7 +15,6 @@ import EmailService from "../services/EmailService";
 class AuthController {
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log(req.file, req.body);
       const data = AuthService.mapUserDataForRegister(req);
       const user = await AuthService.storeUser(data);
 

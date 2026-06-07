@@ -6,10 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import {
-  loginDTO,
-  type ICredentials,
-} from "../../types/auth-type";
+import { loginDTO, type ICredentials } from "../../types/auth-type";
 import { useAuth } from "../../lib/hook/auth-hook";
 
 export const LoginForm = () => {
@@ -17,21 +14,24 @@ export const LoginForm = () => {
   const { login } = useAuth();
 
   //using hook form
-  const {control,handleSubmit, formState: { errors, isSubmitting }} = useForm<ICredentials>({defaultValues: {username: "",
-      password: "",
-    },
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<ICredentials>({
+    defaultValues: { username: "", password: "" },
     resolver: zodResolver(loginDTO),
   });
 
   const submitForm = async (data: ICredentials) => {
     try {
-      const userDetail =  await login(data);
-      if(userDetail){
-
-        navigate("/"+userDetail?.role);
-      }else{
-        throw{message:"Error Logging in"}
-      } 
+      const userDetail = await login(data);
+      console.log(userDetail);
+      if (userDetail) {
+        navigate("/" + userDetail?.role);
+      } else {
+        throw { message: "Error Logging in" };
+      }
     } catch (exception: unknown) {
       toast.error("Invalid or Wrong Credentials");
       console.log(exception);
@@ -72,7 +72,10 @@ export const LoginForm = () => {
       </div>
       <div className="flex w-full gap-3">
         <CancelButton disabled={isSubmitting}>Reset</CancelButton>
-        <SubmitButton className="text-white bg-teal-800 hover:bg-teal-800/90" disabled={isSubmitting}>
+        <SubmitButton
+          className="text-white bg-teal-800 hover:bg-teal-800/90"
+          disabled={isSubmitting}
+        >
           Login
         </SubmitButton>
       </div>

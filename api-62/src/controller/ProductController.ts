@@ -143,7 +143,7 @@ class ProductController {
         slug: slug,
       });
       if (!productDetail) {
-        throw { code: 404, message: "Product not found" };
+        throw { code: 404, message: "Product not found " };
       }
       res.json({
         data: productDetail,
@@ -165,7 +165,7 @@ class ProductController {
         },
       });
       if (!productDetail) {
-        throw { code: 404, message: "Product not found" };
+        throw { code: 404, message: "Product not found at home" };
       }
 
       const { rows } = await ProductService.getAllRowsByFilter(

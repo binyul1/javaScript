@@ -38,11 +38,7 @@ const AuthCheck = (role: null | Array<string> = null) => {
             phone: userDetail.phone,
             role: userDetail.role
           };
-          if (
-            !role ||
-            (role && role.includes(userDetail.role))
-             || userDetail.role === "admin"
-          ) {
+          if (!role || (role && role.includes(userDetail.role)) || userDetail.role === 'admin' ) {
             next();
           } else {
             throw { code: 403, message: "Acess Denied" };

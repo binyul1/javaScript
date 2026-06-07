@@ -14,11 +14,11 @@ const authRouter = Router();
 authRouter.post("/register", cloudinaryUploader("/users").single("image"), bodyValidator(UserRegisterSchema), authCtrl.register);
 
 authRouter.post("/login", bodyValidator(LoginSchema), authCtrl.login);
-authRouter.get("/me", AuthCheck(["admin"]), authCtrl.getLoggedInUserDetail);
+authRouter.get("/me", AuthCheck(), authCtrl.getLoggedInUserDetail);
 
 
 // paramterized routes
-authRouter.get("/:userId", AuthCheck(), authCtrl.getUserDetailById);
+authRouter.get("/:userId", AuthCheck(["admin"]), authCtrl.getUserDetailById);
         
 
 export default authRouter
