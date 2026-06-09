@@ -27,3 +27,8 @@ export const SMTPConfig = {
     password: process.env.SMTP_PASSWORD,
     from: process.env.SMTP_FROM_ADDRESS
 }
+
+export const SQLConfig = {
+    url: process.env.SQL_DB_URL,
+    dbName: process.env.SQL_DB_NAME
+}
