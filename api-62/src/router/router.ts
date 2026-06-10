@@ -3,6 +3,7 @@ import { healthCheck } from "../controller/TestController";
 import authRouter from "./auth-router";
 import productRouter from "./product-router";
 import userRouter from "./user-router";
+import ChatRouter from "./chat-router";
 
 //router
 const router: Router = Router();
@@ -16,5 +17,6 @@ router.get("/", healthCheck);
 router.use("/auth", authRouter);
 router.use("/products", productRouter);
 router.use("/user", userRouter);
+router.use("/chat", ChatRouter);
 
 export default router;

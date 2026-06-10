@@ -13,7 +13,9 @@ export const AllUser = () => {
   useEffect(() => {
     const handleHiReturn = (value: { data: Record<string, string> }) => {
       console.log(value);
-
+      setAllMsg(() => {
+        return [...allMsg, value]
+      })
       toast.success("You Recieved from" + " " + value.data.user, {
         description: value.data.message,
       });
