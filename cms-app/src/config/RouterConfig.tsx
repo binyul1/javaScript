@@ -7,6 +7,7 @@ import NotFound from "../pages/errors/NotFound";
 import CheckLogin from "../components/auth/CheckLogin";
 import { AdminRouter } from "../lib/router/admin-router";
 import UserList from "../pages/users/UserList";
+import ChatBox from "../pages/chat/ChatBox";
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage /> },
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
 
   {path: "/user", element: <CheckLogin allowed="user"><Outlet /></CheckLogin>, children: [
       { index: true, element: <UserList/> },
+      { path: "chat/:userId", element:<ChatBox />},
     ]},
   //
   { path: "*", element: <NotFound /> },

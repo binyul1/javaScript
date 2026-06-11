@@ -2,7 +2,7 @@ import MessageModel from "../model/MessageModel";
 
 class MessageService{
     //CURD
-    static async store(data:{sender:string, reciever:string, messaage:string}){
+    static async store(data:{sender:string, receiver:string, message:string}){
         try {
             const message = await MessageModel.create(data);
             return message;
@@ -12,7 +12,7 @@ class MessageService{
     }
 
     //list all fetch
-    static async getAllByFilter(filter:Record<string, any>, paginationConfig= {page:1, limit:10}){
+    static async getAllByFilter(filter:Record<string, any>, paginationConfig= {page:1, limit:5}){
         try {
             const skip = (paginationConfig.page-1) * paginationConfig.limit
             const {rows, count} = await MessageModel.findAndCountAll({
@@ -47,7 +47,7 @@ class MessageService{
     }
 
     //Update
-    static async updateSingleRowByFilter(filter: Record<string, any>,data:{sender:string, reciever:string, messaage:string} ){
+    static async updateSingleRowByFilter(filter: Record<string, any>,data:{sender:string, receiver:string, message:string} ){
         try {
             const updateResult = await MessageModel.update(data, {
                 where: filter,

@@ -23,8 +23,8 @@ class ChatController {
             const loggedInUser = req.loggedInUser;
             let filter = {
                 [Op.or]: [
-                    { sender: req.params.sender, reciever: loggedInUser?._id as string },
-                    { reciever: req.params.sender, sender: loggedInUser?._id as string }
+                    { sender: req.params.sender, receiver: loggedInUser?._id.toString() },
+                    { receiver: req.params.sender, sender: loggedInUser?._id.toString()}
                 ],
             }
             const page = (req.query.page || 1) as number

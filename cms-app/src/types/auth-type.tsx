@@ -42,6 +42,7 @@ export interface IAddress {
 
 export interface IUserDetail {
   id: number;
+  _id: string;
   firstName: string;
   lastName: string;
   maidenName: string;
@@ -50,7 +51,11 @@ export interface IUserDetail {
   phone: string;
   username: string;
   birthDate: string;
-  image: string;
+  image: {
+    filename: string;
+    originalName: string;
+    
+  };
   address: IAddress;
   university: string;
   company: {

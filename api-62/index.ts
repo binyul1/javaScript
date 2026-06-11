@@ -16,10 +16,11 @@ const io = new Server(server,{
   // io.emit("")
 
   io.on("connection",(socket) => {
-    console.log("Connected Client:", socket.id);
-    socket.on("Recieved",(data) => {
-      console.log("Data from client: ", data);
-      socket.broadcast.emit("HIRecieved", {data: data});
+    // console.log("Connected Client:", socket.id);
+    socket.on("newMessageSend",(data) => {
+      // console.log("Data from client: ", data);
+      // socket.broadcast.emit("messageRecieved", {data: data});
+      socket.emit("messageRecieved", {data: data});
     })
   })
 

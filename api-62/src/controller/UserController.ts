@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import UserModel from "../model/UserModel";
+import UserService from "../services/UserService";
 
 class UserController {
     async getAllUserList(req: Request, res: Response, next: NextFunction) {
@@ -14,6 +15,18 @@ class UserController {
             })
         }
         catch(exceptation){
+            next(exceptation);
+        }
+    }
+    async getUserDetailById(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userDetail = await UserService.getSingleRowByFile({_id: req.params.userId as string});
+            res.json({
+                data: userDetail,
+                message: "User detail retrieved",
+                meta: null
+            });
+        } catch (exceptation) {
             next(exceptation);
         }
     }
